@@ -46,6 +46,9 @@ package  {
 			snowOverlay.initialize(w, h);
 			
 			display.scale = 2;
+			
+			stage.addChild(display);
+			
 			reset();
 		}
 		
