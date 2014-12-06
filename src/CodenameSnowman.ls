@@ -5,6 +5,7 @@ package
 	import loom2d.display.StageScaleMode;
 	import loom2d.display.Image;
 	import loom2d.events.KeyboardEvent;
+	import loom2d.math.Color;
 	import loom2d.textures.Texture;
 	import loom2d.textures.TextureSmoothing;
 	import loom2d.ui.SimpleLabel;

@@ -47,8 +47,8 @@ package  {
 					} else {
 						footstepTime -= footstepTreshold;
 					}
-					trace("step");
-					trace(footstepTime);
+					//trace("step");
+					//trace(footstepTime);
 				}
 				
 				footstepTime += dt;
