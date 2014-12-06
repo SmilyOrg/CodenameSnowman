@@ -12,6 +12,7 @@ package
 	public class CodenameSnowman extends Application
 	{
 		private var environment:Environment;
+		private var snowOverlay:SnowOverlay;
 		
 		override public function run():void
 		{
@@ -25,6 +26,9 @@ package
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
+			snowOverlay = new SnowOverlay();
+			stage.addChild(snowOverlay);
+			snowOverlay.initialize();
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
@@ -38,6 +42,7 @@ package
 		}
 		
 		override public function onTick() {
+			snowOverlay.tick(1 / 60);
 			environment.tick();
 			return super.onTick();
 		}
