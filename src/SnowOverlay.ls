@@ -47,7 +47,7 @@ package
 			child.height = 3;
 		}
 		
-		public function update(dt:Number):void
+		public function tick(dt:Number):void
 		{
 			time += dt;
 			
