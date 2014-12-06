@@ -2,6 +2,7 @@ package
 {
 	import loom.sound.Listener;
 	import loom.sound.Sound;
+	import loom2d.display.DisplayObjectContainer;
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	
