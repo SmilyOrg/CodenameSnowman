@@ -31,12 +31,12 @@ package
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
-			trace(e.keyCode);
+			//trace(e.keyCode);
 			environment.onKeyDown(e);
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void {
-			trace(e.keyCode);
+			//trace(e.keyCode);
 			environment.onKeyUp(e);
 		}
 		

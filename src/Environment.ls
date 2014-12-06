@@ -33,11 +33,9 @@ package  {
 			
 			display.addChild(background);
 			
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
+			for (var i:int = 0; i < 10; i++) {
+				ais.push(new SimpleAI(display));
+			}
 			
 			player = new Player(display);
 			pine = new Pine();
@@ -48,6 +46,7 @@ package  {
 			display.scale = 2;
 			
 			stage.addChild(display);
+			
 			
 			stage.addChild(pine);
 			reset();
@@ -79,7 +78,6 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
-			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
