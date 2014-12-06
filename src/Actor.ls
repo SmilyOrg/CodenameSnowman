@@ -10,6 +10,7 @@ package  {
 		public var moveRight:Boolean = false;
 		
 		protected var speed = 3000;
+		protected var moving = false;
 		private var footstepTime = 0;
 		private var footstepTreshold = 0.2;
 		private var moving0 = false;
@@ -35,7 +36,7 @@ package  {
 			if (moveRight) a.x += 1;
 			if (moveUp) a.y -= 1;
 			if (moveDown) a.y += 1;
-			var moving = v.length > 10;
+			moving = v.length > 10;
 			//trace(moving);
 			if (moving || moving0) {
 				if (footstepTime > footstepTreshold || moving0 != moving) {
