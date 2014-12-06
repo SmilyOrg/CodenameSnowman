@@ -19,6 +19,7 @@ package  {
 		
 		private var player:Player;
 		private var pine:Pine;
+		private var snowball:Snowball;
 		
 		public function Environment(stage:Stage) {
 			
@@ -27,15 +28,12 @@ package  {
 			display.addChild(background);
 			
 			player = new Player(display);
-			pine = new Pine();
-			
-			pine.x = 100;
-			pine.y = 100;
+			pine = new Pine(display);
+			snowball = null;
 			
 			display.scale = 2;
 			
 			stage.addChild(display);
-			stage.addChild(pine);
 		}
 		
 		public function onKeyDown(e:KeyboardEvent) {
@@ -71,14 +69,27 @@ package  {
 					player.moveRight = false;
 					break;
 				case 44:
-					pine.hit();
+					if(snowball == null)
+						snowball = new Snowball(display);
 					break;
 			}
 		}
 		
 		public function tick() {
 			player.tick(t, dt);
-			pine.tick(dt);
+			pine.tick(t, dt);
+			
+			if (snowball != null)
+			{
+				snowball.tick(t, dt);
+				if (snowball.checkCollision(pine))
+				{
+					pine.hit();
+					snowball.destroy();
+					snowball = null;
+				}
+			}
+			
 			t += dt;
 		}
 		
