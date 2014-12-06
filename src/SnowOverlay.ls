@@ -43,8 +43,8 @@ package
 			
 			child.x = Math.randomRange(0, stage.stageWidth);
 			child.y = isYRandom ? Math.randomRange(0, stage.stageHeight) : 0;
-			child.width = 3;
-			child.height = 3;
+			child.width = 1;
+			child.height = 1;
 		}
 		
 		public function tick(dt:Number):void
