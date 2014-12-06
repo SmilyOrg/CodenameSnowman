@@ -47,6 +47,10 @@ package  {
 			display.scale = 2;
 			
 			stage.addChild(display);
+<<<<<<< HEAD
+=======
+			
+			stage.addChild(pine);
 			reset();
 		}
 		
@@ -56,6 +60,7 @@ package  {
 				ai.setPosition(w*0.5, h*0.25);
 			}
 			player.setPosition(w*0.5, h*0.5);
+>>>>>>> e52c747f6ab26dd068ddfbf30387b445a1052495
 		}
 		
 		public function onKeyDown(e:KeyboardEvent) {
@@ -99,6 +104,7 @@ package  {
 		
 		public function tick() {
 			player.tick(t, dt);
+<<<<<<< HEAD
 			pine.tick(t, dt);
 			
 			if (snowball != null)
@@ -110,13 +116,15 @@ package  {
 					snowball.destroy();
 					snowball = null;
 				}
-			}
+=======
 			
+			pine.tick(dt);
 			var playerPos:Point = player.getPosition();
 			for (var i:int = 0; i < ais.length; i++) {
 				var ai = ais[i];
 				ai.target = playerPos;
 				ai.tick(t, dt);
+>>>>>>> e52c747f6ab26dd068ddfbf30387b445a1052495
 			}
 			
 			t += dt;

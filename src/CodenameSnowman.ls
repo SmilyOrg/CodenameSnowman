@@ -1,6 +1,7 @@
 package
 {
 	import loom.Application;
+	import loom.sound.Sound;
 	import loom2d.display.StageScaleMode;
 	import loom2d.display.Image;
 	import loom2d.events.KeyboardEvent;
@@ -11,8 +12,10 @@ package
 
 	public class CodenameSnowman extends Application
 	{
+		private var w = 640;
+		private var h = 360;
+		
 		private var environment:Environment;
-		private var snowOverlay:SnowOverlay;
 		
 		override public function run():void
 		{
@@ -21,14 +24,10 @@ package
 			
 			TextureSmoothing.defaultSmoothing = TextureSmoothing.NONE;
 			
-			environment = new Environment(stage);
+			environment = new Environment(stage, w, h);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-			
-			snowOverlay = new SnowOverlay();
-			stage.addChild(snowOverlay);
-			snowOverlay.initialize();
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
@@ -42,7 +41,6 @@ package
 		}
 		
 		override public function onTick() {
-			snowOverlay.tick(1 / 60);
 			environment.tick();
 			return super.onTick();
 		}
