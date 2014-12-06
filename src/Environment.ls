@@ -23,6 +23,7 @@ package  {
 		
 		private var ais = new Vector.<AI>();
 		private var player:Player;
+		private var pine:Pine;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
@@ -39,11 +40,16 @@ package  {
 			ais.push(new SimpleAI(display));
 			
 			player = new Player(display);
+			pine = new Pine();
+			
+			pine.x = 100;
+			pine.y = 100;
 			
 			display.scale = 2;
 			
 			stage.addChild(display);
 			
+			stage.addChild(pine);
 			reset();
 		}
 		
@@ -73,6 +79,7 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
+			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -86,12 +93,16 @@ package  {
 				case 7: // D
 					player.moveRight = false;
 					break;
+				case 44:
+					pine.hit();
+					break;
 			}
 		}
 		
 		public function tick() {
 			player.tick(t, dt);
 			
+			pine.tick(dt);
 			var playerPos:Point = player.getPosition();
 			for (var i:int = 0; i < ais.length; i++) {
 				var ai = ais[i];

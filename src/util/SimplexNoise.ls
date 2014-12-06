@@ -7,7 +7,7 @@
  * as defined by the Mozilla Public License, v. 2.0.
  */
 
-package eu.liquify.utils
+package util
 {
 	
 	/**
