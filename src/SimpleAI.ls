@@ -10,7 +10,7 @@ package  {
 		
 		public function SimpleAI(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
-			display = new AnimActor("assets/eskimo-walk.png", 4);
+			display = new AnimActor("assets/eskimo-walk.png");
 			display.play();
 			display.center();
 			display.color = 0xFF0000;
