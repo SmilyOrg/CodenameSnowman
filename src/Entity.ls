@@ -2,6 +2,7 @@ package
 {
 	import loom.sound.Listener;
 	import loom.sound.Sound;
+	import loom2d.display.DisplayObjectContainer;
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	
@@ -23,7 +24,7 @@ package
 		/** Acceleration */
 		protected var a:Point;
 		
-		protected var bounds:Rectangle = new Rectangle();
+		public var bounds:Rectangle = new Rectangle();
 		
 		protected static const DRAG_AIR = 0.01;
 		protected static const DRAG_WATER = 0.05;

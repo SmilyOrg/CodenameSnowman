@@ -6,14 +6,20 @@ package  {
 	
 	public class SimpleAI extends AI {
 		
-		private var display:Image;
+		private var display:AnimActor;
 		
 		public function SimpleAI(container:DisplayObjectContainer) {
-			display = new Image(Texture.fromAsset("assets/eskimo.png"));
+			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
+			display = new AnimActor("assets/eskimo-walk.png", 4);
+			display.play();
 			display.center();
 			display.color = 0xFF0000;
 			container.addChild(display);
 			speed *= 0.7;
+			bounds.x = -8;
+			bounds.y = -8;
+			bounds.width = 12;
+			bounds.height = 12;
 		}
 		
 		override public function tick(t:Number, dt:Number) {
@@ -37,12 +43,18 @@ package  {
 			moveDown = s.y > threshold;
 			
 			super.tick(t, dt);
+			display.advanceTime(dt);
 		}
 		
 		override public function render(t:Number) {
 			display.x = p.x;
 			display.y = p.y;
 			super.render(t);
+		}
+		
+		override public function destroy() {
+			display.removeFromParent(true);
+			super.destroy();
 		}
 		
 	}

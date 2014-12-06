@@ -1,20 +1,24 @@
 package  
 {
+	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
+	import loom2d.math.Point;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	/**
 	 * ...
 	 * @author Jure Gregorin
 	 */
-	public class Pine extends Image implements IHittable
+	public class Pine extends Entity implements IHittable
 	{
 		private static var _texture:Vector.<Texture> = new <Texture>(3);
 		
 		private var state:Number = 1;
 		private var counter:Number = 0;
+		private var image:Image;
 		
-		public function Pine():void
+		public function Pine(container: DisplayObjectContainer):void
 		{
 			if (_texture[0] == null)
 			{
@@ -23,11 +27,17 @@ package
 				_texture[2] = Texture.fromAsset("assets/Tree3.png");
 			}
 			
-			texture = _texture[1];
-			scale = 2;
+			image = new Image(_texture[state]);
+			container.addChild(image);
+			
+			v = new Point(0, 0);
+			a = new Point(0, 0);
+			p = new Point(50, 100);
+			
+			bounds = new Rectangle(20, 0, 8, 48);
 		}
 		
-		public function tick(dt:Number):void
+		public override function tick(t:Number, dt:Number):void
 		{			
 			if (state < 2)
 			{
@@ -40,7 +50,9 @@ package
 				}
 			}
 			
-			texture = _texture[state];
+			image.texture = _texture[state];
+			image.x = p.x;
+			image.y = p.y;
 		}
 		
 		/* INTERFACE IHittable */
@@ -49,7 +61,7 @@ package
 		{
 			state = 0;
 			counter = 0;
-			texture = _texture[state];
+			image.texture = _texture[state];
 		}
 		
 	}
