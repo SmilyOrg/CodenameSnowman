@@ -5,10 +5,12 @@ package  {
 	
 	public class SimpleAI extends AI {
 		
-		private var display:Image;
+		private var display:AnimActor;
 		
 		public function SimpleAI(container:DisplayObjectContainer) {
-			display = new Image(Texture.fromAsset("assets/eskimo.png"));
+			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
+			display = new AnimActor("assets/eskimo-walk.png", 4);
+			display.play();
 			display.center();
 			display.color = 0xFF0000;
 			container.addChild(display);
@@ -24,6 +26,7 @@ package  {
 			a.y = Math.random()-0.5;
 			a.normalize(speed*0.2);
 			super.tick(t, dt);
+			display.advanceTime(dt);
 		}
 		
 		override public function render(t:Number) {

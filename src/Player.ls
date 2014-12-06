@@ -7,11 +7,13 @@ package  {
 	
 	public class Player extends Actor {
 		
-		private var display:Image;
+		private var display:AnimActor;
 		private var direction:Point = new Point(1, 0);
 		
 		public function Player(container:DisplayObjectContainer) {
-			display = new Image(Texture.fromAsset("assets/eskimo.png"));
+			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
+			display = new AnimActor("assets/eskimo-walk.png", 4);
+			display.play();
 			display.center();
 			container.addChild(display);
 		}
@@ -22,6 +24,10 @@ package  {
 			if (moving0 && v.length > 70)
 			{
 				direction = v;
+			}
+			display.advanceTime(dt * v.length * 0.02);
+			if (!moving) {
+				display.currentFrame = 0;
 			}
 		}
 		
