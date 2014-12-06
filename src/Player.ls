@@ -13,18 +13,20 @@ package  {
 		private var display:Image;
 		
 		public function Player(container:DisplayObjectContainer) {
-			display = new Image(Texture.fromAsset("assets/logo.png"));
+			display = new Image(Texture.fromAsset("assets/eskimo.png"));
 			container.addChild(display);
 		}
 		
 		override public function tick(t:Number, dt:Number) {
-			var speed = 5000;
-			if (moveLeft) a.x -= speed;
-			if (moveRight) a.x += speed;
-			if (moveUp) a.y -= speed;
-			if (moveDown) a.y += speed;
+			var speed = 3000;
+			if (moveLeft) a.x -= 1;
+			if (moveRight) a.x += 1;
+			if (moveUp) a.y -= 1;
+			if (moveDown) a.y += 1;
 			
-			drag(dt, 0.2);
+			a.normalize(speed);
+			
+			drag(dt, 0.5);
 			super.tick(t, dt);
 		}
 		

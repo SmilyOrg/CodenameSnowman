@@ -1,7 +1,9 @@
 package  {
+	import loom2d.display.Image;
 	import loom2d.display.Sprite;
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
+	import loom2d.textures.Texture;
 	
 	public class Environment {
 		
@@ -11,12 +13,21 @@ package  {
 		/** Simulation time */
 		private var t = 0;
 		
+		private var background:Image;
+		
 		private var display:Sprite = new Sprite();
 		
 		private var player:Player;
 		
 		public function Environment(stage:Stage) {
+			
+			background = new Image(Texture.fromAsset("assets/background.png"));
+			
+			display.addChild(background);
+			
 			player = new Player(display);
+			
+			display.scale = 2;
 			
 			stage.addChild(display);
 		}
