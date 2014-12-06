@@ -7,6 +7,8 @@ package  {
 	import loom2d.math.Color;
 	import loom2d.math.Point;
 	import loom2d.textures.Texture;
+	import system.platform.Path;
+	import system.xml.XMLDocument;
 	
 	public class Player extends Actor {
 		
@@ -21,12 +23,17 @@ package  {
 			display.center();
 			container.addChild(display);
 			
-			pdps = PDParticleSystem.loadLiveSystem("assets/particles/coldy-breath.pex");
+			var path = "assets/particles/coldy-breath.pex";
+			var config = new XMLDocument();
+			config.loadFile(path);
+			var basePath = Path.folderFromPath(path);
+			var tex = Texture.fromAsset("assets/particles/coldy-breath.png");
+			pdps = new PDParticleSystem(config, tex, basePath);
 			container.addChild(pdps);
 			
 			pdps.emitterX = 60;
 			pdps.emitterY = 60;
-			pdps.startColor = new Color(1,0,0,1);
+			//pdps.startColor = new Color(1,0,0,1);
 			pdps.populate(1);
 			Loom2D.juggler.add(pdps);
 		}
