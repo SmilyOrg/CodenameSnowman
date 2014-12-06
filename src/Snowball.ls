@@ -2,6 +2,7 @@ package
 {
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
+	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
@@ -13,16 +14,18 @@ package
 	{
 		private var image:Image;
 		
-		public function Snowball(container:DisplayObjectContainer) 
+		public function Snowball(container:DisplayObjectContainer, origin:Point, direction:Point) 
 		{
 			image = new Image(Texture.fromAsset("assets/snowball.png"));
 			
 			container.addChild(image);
 			
-			v.x = 40;
-			v.y = -40;
-			p.x = 0;
-			p.y = 195;
+			direction.normalize();
+			
+			v.x = direction.x * 240;
+			v.y = direction.y * 240;
+			p.x = origin.x;
+			p.y = origin.y;
 			
 			bounds = new Rectangle( -4, -4, 8, 8);
 		}
@@ -34,8 +37,8 @@ package
 		
 		override public function tick(t:Number, dt:Number):void 
 		{
-			image.x = p.x - bounds.left;
-			image.y = p.y - bounds.top;
+			image.x = p.x + bounds.left;
+			image.y = p.y + bounds.top;
 			
 			super.tick(t, dt);
 		}

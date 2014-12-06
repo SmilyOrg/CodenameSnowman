@@ -4,15 +4,10 @@ package  {
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
 	import loom2d.math.Point;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	public class Environment {
-		
-		/** Simulation delta time */
-		private var dt = 1/60;
-		
-		/** Simulation time */
-		private var t = 0;
 		
 		private var w:int;
 		private var h:int;
@@ -25,13 +20,13 @@ package  {
 		private var player:Player;
 		private var pine:Pine;
 		private var snowball:Snowball;
+		private var arena:Entity;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
 			this.h = h;
 			
 			background = new Image(Texture.fromAsset("assets/background.png"));
-			
 			display.addChild(background);
 			
 			ais.push(new SimpleAI(display));
@@ -45,6 +40,9 @@ package  {
 			snowball = null;
 			
 			display.scale = 2;
+			
+			arena = new Entity();
+			arena.bounds = new Rectangle(0, 0, background.width, background.height);
 			
 			stage.addChild(display);
 			reset();
@@ -92,16 +90,16 @@ package  {
 					break;
 				case 44:
 					if(snowball == null)
-						snowball = new Snowball(display);
+						snowball = new Snowball(display, player.getPosition(), player.getDirection());
 					break;
 			}
 		}
 		
-		public function tick() {
+		public override function tick(t:Number, dt:Number) {
 			player.tick(t, dt);
 			pine.tick(t, dt);
 			
-			if (snowball != null)
+			while (snowball != null)
 			{
 				snowball.tick(t, dt);
 				if (snowball.checkCollision(pine))
@@ -109,24 +107,60 @@ package  {
 					pine.hit();
 					snowball.destroy();
 					snowball = null;
+					break;
+				}
+				
+				if (!snowball.checkCollision(arena))
+				{
+					snowball.destroy();
+					snowball = null;
+					break;
+				}
+				
+				break;
+			}
+			
+			var ai:AI;
+			var i:int;
+			
+			if (snowball != null)
+			{
+				for (i = 0; i < ais.length; i++) {
+					ai = ais[i];
+					if (ai != null && snowball.checkCollision(ai))
+					{
+						ai.destroy();
+						ais[i] = null;
+						
+						snowball.destroy();
+						snowball = null;
+						
+						break;
+					}
 				}
 			}
 			
 			var playerPos:Point = player.getPosition();
-			for (var i:int = 0; i < ais.length; i++) {
-				var ai = ais[i];
-				ai.target = playerPos;
-				ai.tick(t, dt);
+			for (i = 0; i < ais.length; i++) {
+				ai = ais[i];
+				if (ai != null)
+				{
+					ai.target = playerPos;
+					ai.tick(t, dt);
+				}
 			}
 			
 			t += dt;
 		}
 		
-		public function render() {
+		public override function render(t:Number) {
 			player.render(t);
 			for (var i:int = 0; i < ais.length; i++) {
 				var ai = ais[i];
-				ai.render(t);
+				if (ai != null)
+				{
+					ai.render(t);
+				}
 			}
 		}
 		

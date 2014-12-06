@@ -14,6 +14,11 @@ package  {
 			display.center();
 			display.color = 0xFF0000;
 			container.addChild(display);
+			
+			bounds.x = -8;
+			bounds.y = -8;
+			bounds.width = 12;
+			bounds.height = 12;
 		}
 		
 		override public function tick(t:Number, dt:Number) {
@@ -28,6 +33,11 @@ package  {
 			display.x = p.x;
 			display.y = p.y;
 			super.render(t);
+		}
+		
+		override public function destroy() {
+			display.removeFromParent(true);
+			super.destroy();
 		}
 		
 	}

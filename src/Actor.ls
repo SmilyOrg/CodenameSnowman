@@ -1,4 +1,4 @@
-package  {
+﻿package  {
 	import loom.sound.Sound;
 	import loom2d.math.Point;
 	
@@ -13,7 +13,7 @@ package  {
 		protected var moving = false;
 		private var footstepTime = 0;
 		private var footstepTreshold = 0.2;
-		private var moving0 = false;
+		protected var moving0 = false;
 		
 		private var footstep:Sound;
 		
