@@ -37,7 +37,6 @@ package  {
 			if (moveUp) a.y -= 1;
 			if (moveDown) a.y += 1;
 			moving = v.length > 10;
-			//trace(moving);
 			if (moving || moving0) {
 				if (footstepTime > footstepTreshold || moving0 != moving) {
 					footstep.setPitch(Math.random() * 0.5 + 0.7);
@@ -47,8 +46,6 @@ package  {
 					} else {
 						footstepTime -= footstepTreshold;
 					}
-					//trace("step");
-					//trace(footstepTime);
 				}
 				
 				footstepTime += dt;
