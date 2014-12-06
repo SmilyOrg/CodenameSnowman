@@ -12,7 +12,7 @@ package  {
 		protected var speed = 3000;
 		private var footstepTime = 0;
 		private var footstepTreshold = 0.2;
-		private var moving0 = false;
+		protected var moving0 = false;
 		
 		private var footstep:Sound;
 		
@@ -46,8 +46,7 @@ package  {
 					} else {
 						footstepTime -= footstepTreshold;
 					}
-					trace("step");
-					trace(footstepTime);
+					//trace(footstepTime);
 				}
 				
 				footstepTime += dt;

@@ -12,6 +12,12 @@ package
 
 	public class CodenameSnowman extends Application
 	{
+		/** Simulation delta time */
+		private var dt = 1/60;
+		
+		/** Simulation time */
+		private var t = 0;
+		
 		private var w = 640;
 		private var h = 360;
 		
@@ -31,22 +37,20 @@ package
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
-			trace(e.keyCode);
 			environment.onKeyDown(e);
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void {
-			trace(e.keyCode);
 			environment.onKeyUp(e);
 		}
 		
 		override public function onTick() {
-			environment.tick();
+			environment.tick(t, dt);
 			return super.onTick();
 		}
 		
 		override public function onFrame() {
-			environment.render();
+			environment.render(t);
 			return super.onFrame();
 		}
 	}
