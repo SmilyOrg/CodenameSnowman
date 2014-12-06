@@ -1,4 +1,4 @@
-﻿package  {
+package  {
 	import extensions.PDParticleSystem;
 	import loom.sound.Sound;
 	import loom2d.display.DisplayObjectContainer;
@@ -21,13 +21,13 @@
 			display.center();
 			container.addChild(display);
 			
-			pdps = PDParticleSystem.loadLiveSystem("assets/particles/explosion.pex");
+			pdps = PDParticleSystem.loadLiveSystem("assets/particles/coldy-breath.pex");
 			container.addChild(pdps);
 			
 			pdps.emitterX = 60;
 			pdps.emitterY = 60;
 			pdps.startColor = new Color(1,0,0,1);
-			pdps.populate(10);
+			pdps.populate(1);
 			Loom2D.juggler.add(pdps);
 		}
 		
@@ -42,7 +42,7 @@
 			if (!moving) {
 				display.currentFrame = 0;
 			}
-			pdps.populate(5);
+			pdps.populate(1);
 			pdps.emitterX = this.getPosition().x;
 			pdps.emitterY = this.getPosition().y;
 		}

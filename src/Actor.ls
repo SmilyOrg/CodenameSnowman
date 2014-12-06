@@ -1,4 +1,4 @@
-﻿package  {
+package  {
 	import loom.sound.Sound;
 	import loom2d.math.Point;
 	
