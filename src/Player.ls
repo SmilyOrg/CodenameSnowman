@@ -1,6 +1,8 @@
 package  {
+	import loom.sound.Sound;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
+	import loom2d.math.Point;
 	import loom2d.textures.Texture;
 	
 	public class Player extends Entity {
@@ -11,13 +13,42 @@ package  {
 		public var moveRight:Boolean = false;
 		
 		private var display:Image;
+		private var lastPos:Point;
+		private var footstep:Sound;
+		private var speed = 5;
+		private var footstepTime = 0;
+		private var footstepTreshold = 0.3;
+		private var moving0 = false;
 		
 		public function Player(container:DisplayObjectContainer) {
 			display = new Image(Texture.fromAsset("assets/logo.png"));
 			container.addChild(display);
+			
+			lastPos = this.p;
+			
+			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
 		}
 		
 		override public function tick(t:Number, dt:Number) {
+			var moving = v.length > 10;
+			//trace(moving);
+			if (moving || moving0) {
+				if (footstepTime > footstepTreshold || moving0 != moving) {
+					footstep.setPitch(Math.random() * 0.5 + 0.7);
+					footstep.play();
+					if (moving0 != moving) {
+						footstepTime = 0;
+					} else {
+						footstepTime -= footstepTreshold;
+					}
+					trace("step");
+					trace(footstepTime);
+				}
+				
+				footstepTime += dt;
+			}
+			moving0 = moving;
+			
 			var speed = 5000;
 			if (moveLeft) a.x -= speed;
 			if (moveRight) a.x += speed;
