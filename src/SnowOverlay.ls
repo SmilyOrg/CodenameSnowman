@@ -43,8 +43,8 @@ package
 			
 			child.x = Math.randomRange(0, stage.stageWidth);
 			child.y = isYRandom ? Math.randomRange(0, stage.stageHeight) : 0;
-			child.width = 1;
-			child.height = 1;
+			child.width = 4;
+			child.height = 4;
 		}
 		
 		public function tick(dt:Number):void
@@ -57,8 +57,8 @@ package
 				var child = this.getChildAt(i);
 				
 				child.y += 60 * dt;
-				var wind = noise.harmonicNoise2D(time, child.y, 3, 0.1, 0.001, 2);
-				child.x += wind * dt * 60;
+				var wind = noise.harmonicNoise2D(time, child.y + time, 3, 0.1, 0.0005, 3);
+				child.x += wind * dt * 120;
 				
 				if (child.y > stage.stageHeight)
 				{

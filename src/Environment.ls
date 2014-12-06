@@ -18,6 +18,7 @@ package  {
 		private var display:Sprite = new Sprite();
 		
 		private var player:Player;
+		private var pine:Pine;
 		
 		public function Environment(stage:Stage) {
 			
@@ -26,10 +27,15 @@ package  {
 			display.addChild(background);
 			
 			player = new Player(display);
+			pine = new Pine();
+			
+			pine.x = 100;
+			pine.y = 100;
 			
 			display.scale = 2;
 			
 			stage.addChild(display);
+			stage.addChild(pine);
 		}
 		
 		public function onKeyDown(e:KeyboardEvent) {
@@ -50,6 +56,7 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
+			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -63,11 +70,15 @@ package  {
 				case 7: // D
 					player.moveRight = false;
 					break;
+				case 44:
+					pine.hit();
+					break;
 			}
 		}
 		
 		public function tick() {
 			player.tick(t, dt);
+			pine.tick(dt);
 			t += dt;
 		}
 		
