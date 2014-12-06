@@ -1,11 +1,11 @@
 package  
 {
-	import eu.liquify.utils.SimplexNoise;
 	import loom2d.display.Image;
 	import loom2d.display.Quad;
 	import loom2d.display.Sprite;
 	import loom2d.display.DisplayObject;
 	import loom2d.textures.Texture;
+	import util.SimplexNoise;
 	/**
 	 * ...
 	 * @author Jure Gregorin
