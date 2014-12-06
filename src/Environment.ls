@@ -21,6 +21,7 @@ package  {
 		private var pine:Pine;
 		private var snowball:Snowball;
 		private var arena:Entity;
+		private var snowOverlay:SnowOverlay;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
@@ -37,12 +38,14 @@ package  {
 			pine = new Pine(display);
 			snowball = null;
 			
-			display.scale = 2;
-			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
 			
+			snowOverlay = new SnowOverlay();
+			display.addChild(snowOverlay);
+			snowOverlay.initialize(w, h);
 			
+			display.scale = 2;
 			reset();
 		}
 		
@@ -95,6 +98,7 @@ package  {
 		public override function tick(t:Number, dt:Number) {
 			player.tick(t, dt);
 			pine.tick(t, dt);
+			snowOverlay.tick(dt);
 			
 			while (snowball != null)
 			{
