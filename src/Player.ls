@@ -1,4 +1,4 @@
-﻿package  {
+package  {
 	import extensions.PDParticleSystem;
 	import loom.sound.Sound;
 	import loom2d.display.DisplayObjectContainer;
@@ -20,13 +20,13 @@
 		private var animDirections:Vector.<int> = [0, 7, 6, 5, 4, 3, 2, 1];
 		private var emmiterLocations:Vector.<Point> = [
 														new Point(16, 3), //up
-														new Point(16, 3), //up-right
+														new Point(22, 7), //up-right
 														new Point(16, 18), //right
-														new Point(16, 18), //down-right
+														new Point(20, 18), //down-right
 														new Point(8, 18), //down
-														new Point(8, 18), //down-left
+														new Point(12, 18), //down-left
 														new Point(24, 18), //left
-														new Point(24, 18) //up-left
+														new Point(10, 8) //up-left
 													];
 		private var activeAnim:AnimActor;
 		private var currDir:int = 2;
@@ -64,7 +64,7 @@
 				animsShadow[i].play();
 				animsShadow[i].center();
 				container.addChild(anims[i]);
-				environment.getGround().addChild(animsShadow[i]);
+				environment.getShadowLayer().addChild(animsShadow[i]);
 			}
 			
 			handleDirection();

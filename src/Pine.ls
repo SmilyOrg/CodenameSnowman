@@ -40,7 +40,7 @@ package
 			container.addChild(overlay);
 			
 			shadow = new Image(shadowTexture);
-			environment.getGround().addChild(shadow);
+			environment.getShadowLayer().addChild(shadow);
 			
 			overlayTime = MAX_OVERLAY_TIME;
 			

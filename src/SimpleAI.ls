@@ -41,7 +41,7 @@ package  {
 				animsShadow[i].play();
 				animsShadow[i].center();
 				container.addChild(anims[i]);
-				environment.getGround().addChild(animsShadow[i]);
+				environment.getShadowLayer().addChild(animsShadow[i]);
 			}
 			
 			handleDirection();
