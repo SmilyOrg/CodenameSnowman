@@ -31,6 +31,7 @@ package  {
 		private var chargeSound:Sound;
 		private var chargeTimer = -1;
 		private var chargeTime = 1;
+		private var lifes = 5;
 		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
@@ -133,6 +134,13 @@ package  {
 			if (!super.destroy()) return false;
 			basic.destroy();
 			return true;
+		}
+		
+		public function takeDamage():Boolean
+		{
+			lifes--;
+			
+			return lifes <= 0;
 		}
 		
 	}

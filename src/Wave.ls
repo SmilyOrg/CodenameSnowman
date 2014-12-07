@@ -16,9 +16,9 @@ package
 			
 		}
 		
-		public function addSpawnPoint(location:Point, type:EnemyType, count:Number, interval:Number)
+		public function addSpawnPoint(location:Point, type:EnemyType, count:Number, interval:Number, delay:Number)
 		{
-			var spawnPoint = new SpawnPoint(location, type, count, interval, spawned, died);
+			var spawnPoint = new SpawnPoint(location, type, count, interval, delay, spawned, died);
 			spawnPoints.push(spawnPoint);
 		}
 		
