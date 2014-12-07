@@ -41,7 +41,8 @@ package
 			overlay = new Image(textureOverlay);
 			display.addChild(overlay);
 			
-			overlay.y = image.y = -image.height+4;
+			overlay.y = image.y = -image.height + 4;
+			overlay.x = image.x = -image.width / 2;
 			
 			container.addChild(display);
 			
@@ -54,7 +55,7 @@ package
 			a = new Point(0, 0);
 			p = new Point(100, 100);
 			
-			bounds = new Rectangle(27, image.y, 8, 48);
+			bounds = new Rectangle(-16, -60, 32, 60);
 		}
 		
 		public override function tick(t:Number, dt:Number):void

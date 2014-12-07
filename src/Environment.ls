@@ -17,7 +17,6 @@ package  {
 		private var h:int;
 		
 		private var background:Image;
-		private var cursor:Sprite;
 		
 		private var shadowLayer:Sprite = new Sprite();
 		private var ground:Sprite = new Sprite();
@@ -59,9 +58,6 @@ package  {
 			
 			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
 			ground.addChild(background);
-			
-			cursor = new Sprite();
-			cursor.addChild(new Image(Texture.fromAsset("assets/cursor.png")));
 			
 			addEntity(player = new Player(display));
 			addEntity(walls = new Walls());
@@ -113,7 +109,6 @@ package  {
 			stage.addChild(shadowLayer);
 			stage.addChild(display);
 			stage.addChild(ui);
-			stage.addChild(cursor);
 			
 			var wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 2, 20);
@@ -137,13 +132,6 @@ package  {
 			waves.push(wave);
 			
 			reset();
-		}
-		
-		public function setCursorPosition(t:Touch)
-		{
-			var pos = t.getLocation(ground);
-			cursor.x = pos.x - cursor.width / 2;
-			cursor.y = pos.y - cursor.height / 2;
 		}
 		
 		public function addPine(x:int, y:int)
