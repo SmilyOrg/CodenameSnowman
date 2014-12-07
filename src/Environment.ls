@@ -1,4 +1,5 @@
 package  {
+	import loom2d.display.DisplayObject;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
 	import loom2d.display.Sprite;
@@ -142,7 +143,7 @@ package  {
 			spawnTimer += dt;
 			if (spawnTimer > spawnTime && ais.length < spawnMax) {
 				spawnTimer = 0;
-				ai = new SimpleAI(display);
+				ai = new ThinkyAI(display);
 				var angle = Math.randomRange(0, Math.TWOPI);
 				var radius = Math.randomRange(spawnRadiusMin, spawnRadiusMax);
 				ai.setPosition(w/2+Math.cos(angle)*radius, h/2+Math.sin(angle)*radius);
@@ -193,10 +194,15 @@ package  {
 		}
 		
 		public override function render(t:Number) {
+			display.sortChildren(sortByY);
 			for (var i = 0; i < entities.length; i++) {
 				var entity = entities[i];
 				entity.render(t);
 			}
+		}
+		
+		private function sortByY(a:DisplayObject, b:DisplayObject):int {
+			return a.y < b.y ? -1 : a.y > b.y ? 1 : 0;
 		}
 		
 		private function flush() {

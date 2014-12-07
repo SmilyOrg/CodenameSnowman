@@ -68,7 +68,6 @@ package  {
 		}
 		
 		override public function tick(t:Number, dt:Number) {
-			super.tick(t, dt);
 			pdps.advanceTime(dt);
 			//Player breath
 			var breathDelay = 2;
@@ -100,6 +99,8 @@ package  {
 					anims[i].currentFrame = 0;
 				}
 			}
+			
+			super.tick(t, dt);
 			
 			/*display.advanceTime(dt * v.length * 0.02);
 			if (!moving) {
