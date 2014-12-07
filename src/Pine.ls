@@ -72,8 +72,8 @@ package
 			display.x = p.x;
 			display.y = p.y;
 			
-			shadow.x = image.x + 12;
-			shadow.y = image.y;
+			shadow.x = display.x + 12;
+			shadow.y = display.y + image.y;
 		}
 		
 		/* INTERFACE IHittable */
