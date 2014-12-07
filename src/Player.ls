@@ -30,6 +30,10 @@ package  {
 		private var activeAnim:AnimActor;
 		//private var direction:int = 2;
 		
+		private var chargeSound:Sound;
+		private var chargeTimer = -1;
+		private var chargeTime = 0.3;
+		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
 			
@@ -54,6 +58,9 @@ package  {
 			display.center();
 			container.addChild(display);*/
 			
+			
+			chargeSound = Sound.load("assets/sound/zzzip.ogg");
+			
 			var path = "assets/particles/coldy-breath.pex";
 			var tex = Texture.fromAsset("assets/particles/coldy-breath.png");
 			pdps = PDParticleSystem.loadLiveSystem(path, tex);
@@ -74,6 +81,13 @@ package  {
 			}
 			breathTime += dt;
 			
+			if (chargeTimer != -1) {
+				chargeTimer = Math.min(chargeTime, chargeTimer+dt);
+				if (chargeTimer > 0.2) {
+					if (!chargeSound.isPlaying() && chargeTimer < chargeTime) chargeSound.play();
+				}
+			}
+			
 			if (moving0 && v.length > 70)
 			{
 				handleDirection();
@@ -91,6 +105,24 @@ package  {
 			if (!moving) {
 				display.currentFrame = 0;
 			}*/
+		}
+		
+		public function charge() {
+			chargeTimer = 0;
+			chargeSound.play();
+		}
+		
+		public function resetCharge() {
+			chargeTimer = -1;
+			chargeSound.stop();
+		}
+		
+		public function get currentCharge():Number {
+			return chargeTimer;
+		}
+		
+		public function get maxCharge():Number {
+			return chargeTime;
 		}
 		
 		private function setActiveAnim(anim:AnimActor = null) {
@@ -130,6 +162,13 @@ package  {
 		public function getPosition():Point {
 			return p;
 		}
+		
+		override public function destroy():Boolean {
+			if (!super.destroy()) return false;
+			display.removeFromParent(true);
+			return true;
+		}
+		
 	}
 	
 }
