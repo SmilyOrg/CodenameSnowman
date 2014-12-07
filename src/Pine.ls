@@ -16,16 +16,24 @@ package
 		private static var texture:Texture = null;
 		private static var textureOverlay:Texture = null;
 		
+		private static var shadowTexture:Texture = null;
+		private static var shadowTextureOverlay:Texture = null;
+		
 		private static const MAX_OVERLAY_TIME = 10;
 		private var overlayTime:Number = 0;
 		private var display:Sprite = new Sprite();
 		private var image:Image;
 		private var overlay:Image;
+		private var shadow:Image;
 		
 		public function Pine(container: DisplayObjectContainer):void
 		{
-			texture = Texture.fromAsset("assets/Tree.png");
-			textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
+			if (texture == null)
+				texture = Texture.fromAsset("assets/Tree.png");
+			if(shadowTexture == null)
+				shadowTexture = Texture.fromAsset("assets/Tree-shadow.png");
+			if(textureOverlay == null)
+				textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
 			
 			image = new Image(texture);
 			display.addChild(image);
@@ -37,11 +45,14 @@ package
 			
 			container.addChild(display);
 			
+			shadow = new Image(shadowTexture);
+			environment.getShadowLayer().addChild(shadow);
+			
 			overlayTime = MAX_OVERLAY_TIME;
 			
 			v = new Point(0, 0);
 			a = new Point(0, 0);
-			p = new Point(50, 100);
+			p = new Point(100, 100);
 			
 			bounds = new Rectangle(20, image.y, 8, 48);
 		}
@@ -60,6 +71,9 @@ package
 			
 			display.x = p.x;
 			display.y = p.y;
+			
+			shadow.x = image.x + 12;
+			shadow.y = image.y;
 		}
 		
 		/* INTERFACE IHittable */

@@ -16,6 +16,7 @@ package  {
 		
 		private var background:Image;
 		
+		private var shadowLayer:Sprite = new Sprite();
 		private var ground:Sprite = new Sprite();
 		private var display:Sprite = new Sprite();
 		private var ui:Sprite = new Sprite();
@@ -25,6 +26,8 @@ package  {
 		private var ais = new Vector.<AI>();
 		private var player:Player;
 		private var pine:Pine;
+		private var walls:Walls;
+		private var flag:Flag;
 		private var snowballs = new Vector.<Snowball>();
 		
 		private var entities = new Vector.<Entity>();
@@ -50,6 +53,8 @@ package  {
 			
 			addEntity(player = new Player(display));
 			addEntity(pine = new Pine(display));
+			addEntity(walls = new Walls());
+			addEntity(flag = new Flag());
 			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
@@ -64,10 +69,12 @@ package  {
 			spawnRadiusMax = 300;
 			
 			display.scale = 2;
+			shadowLayer.scale = 2;
 			ground.scale = 2;
 			ui.scale = 2;
 			
 			stage.addChild(ground);
+			stage.addChild(shadowLayer);
 			stage.addChild(display);
 			stage.addChild(ui);
 			
@@ -105,6 +112,9 @@ package  {
 				case 7: // D
 					player.moveRight = true;
 					break;
+				case 8: // E
+					player.startMakingSnowball();
+					break;
 				case 44: // Space
 					player.charge();
 					break;
@@ -112,6 +122,7 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
+			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -125,11 +136,16 @@ package  {
 				case 7: // D
 					player.moveRight = false;
 					break;
-				case 44: // Space
-					var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
-					snowballs.push(snowball);
-					addEntity(snowball);
-					player.resetCharge();
+				case 8: // E
+					player.endMakingSnowball();
+					break;
+				case 44:
+					if (snowballUi.throwSnowball())
+					{
+						var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
+						snowballs.push(snowball);
+						addEntity(snowball);
+					}
 					break;
 			}
 		}
@@ -233,6 +249,15 @@ package  {
 		public function getUi():DisplayObjectContainer
 		{
 			return ui;
+		}
+		public function getShadowLayer():DisplayObjectContainer
+		{
+			return shadowLayer;
+		}
+		
+		public function getSnowballUi(): SnowballUI
+		{
+			return snowballUi;
 		}
 	}
 	
