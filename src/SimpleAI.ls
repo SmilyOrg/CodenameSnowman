@@ -9,6 +9,7 @@ package  {
 		private var display:AnimActor;
 		private var direction:Point = new Point(1, 0);
 		private var anims:Vector.<AnimActor>;
+		private var animsShadow:Vector.<AnimActor>;
 		private var animDirections:Vector.<int> = [0, 7, 6, 5, 4, 3, 2, 1];
 		private var activeAnim:AnimActor;
 		
@@ -23,12 +24,27 @@ package  {
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 6));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
 			
+			animsShadow = new Vector.<AnimActor>();
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 0));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 7));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 2));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 3));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 4));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 5));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 6));
+			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 1));
+			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].play();
 				anims[i].center();
 				anims[i].color = 0xFF0000;
+				animsShadow[i].play();
+				animsShadow[i].center();
 				container.addChild(anims[i]);
+				environment.getGround().addChild(animsShadow[i]);
 			}
+			
+			handleDirection();
 			
 			speed *= 0.7;
 			bounds.x = -8;
@@ -67,8 +83,10 @@ package  {
 			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].advanceTime(dt * v.length * 0.02);
+				animsShadow[i].advanceTime(dt * v.length * 0.02);
 				if (!moving || anims[i].currentFrame == 3) {
 					anims[i].currentFrame = 0;
+					animsShadow[i].currentFrame = 0;
 				}
 			}
 			
@@ -82,14 +100,19 @@ package  {
 			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].visible = false;
+				animsShadow[i].visible = false;
 			}
 			anims[animDirections[angle]].visible = true;
+			animsShadow[animDirections[angle]].visible = true;
 		}
 		
 		override public function render(t:Number) {
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].x = p.x;
 				anims[i].y = p.y;
+				
+				animsShadow[i].x = p.x + 10;
+				animsShadow[i].y = p.y;
 			}
 			
 			super.render(t);
@@ -99,6 +122,7 @@ package  {
 			if (!super.destroy()) return false;
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].removeFromParent(true);
+				animsShadow[i].removeFromParent(true);
 			}
 			return true;
 		}

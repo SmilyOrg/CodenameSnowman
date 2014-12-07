@@ -104,10 +104,14 @@ package  {
 				case 7: // D
 					player.moveRight = true;
 					break;
+				case 8: // E
+					player.startMakingSnowball();
+					break;
 			}
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
+			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -121,10 +125,16 @@ package  {
 				case 7: // D
 					player.moveRight = false;
 					break;
+				case 8: // E
+					player.endMakingSnowball();
+					break;
 				case 44:
-					var snowball = new Snowball(display, player.getPosition(), player.getDirection());
-					snowballs.push(snowball);
-					addEntity(snowball);
+					if (snowballUi.throwSnowball())
+					{
+						var snowball = new Snowball(display, player.getPosition(), player.getDirection());
+						snowballs.push(snowball);
+						addEntity(snowball);
+					}
 					break;
 			}
 		}
@@ -224,6 +234,11 @@ package  {
 		public function getUi():DisplayObjectContainer
 		{
 			return ui;
+		}
+		
+		public function getSnowballUi(): SnowballUI
+		{
+			return snowballUi;
 		}
 	}
 	
