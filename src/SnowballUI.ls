@@ -57,12 +57,15 @@ package
 			return false;
 		}
 		
-		public function pickUpSnowball():void
+		public function pickUpSnowball():Boolean
 		{
 			if (snowballCount < MAX_SNOWBALLS)
 			{
 				snowballCount++;
+				return true;
 			}
+			
+			return false;
 		}
 		
 		override public function tick(t:Number, dt:Number)

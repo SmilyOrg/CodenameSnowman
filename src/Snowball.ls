@@ -13,12 +13,23 @@ package
 	public class Snowball extends Entity
 	{
 		private var image:Image;
+		private var shadowImage:Image;
+		private static var texture:Texture;
+		private static var shadowTexture:Texture;
 		
 		public function Snowball(container:DisplayObjectContainer, origin:Point, direction:Point, charge:Number, maxCharge:Number) 
 		{
-			image = new Image(Texture.fromAsset("assets/snowball.png"));
+			if (texture == null)
+				texture = Texture.fromAsset("assets/snowball.png");
+				
+			if (shadowTexture == null)
+				shadowTexture = Texture.fromAsset("assets/snowball-shadow.png");
+			
+			image = new Image(texture);
+			shadowImage = new Image(shadowTexture);
 			
 			container.addChild(image);
+			environment.getShadowLayer().addChild(shadowImage);
 			
 			direction.normalize();
 			
@@ -41,6 +52,9 @@ package
 			image.x = p.x + bounds.left;
 			image.y = p.y + bounds.top;
 			
+			shadowImage.x = image.x + 4;
+			shadowImage.y = image.y - 6;
+			
 			super.render(t);
 		}
 		
@@ -48,6 +62,7 @@ package
 		{
 			if (!super.destroy()) return false;
 			image.removeFromParent(true);
+			shadowImage.removeFromParent(true);
 			return true;
 		}
 	}
