@@ -9,10 +9,6 @@ package  {
 			
 		}
 		
-		public function destroy()
-		{
-		}
-		
 	}
 	
 }

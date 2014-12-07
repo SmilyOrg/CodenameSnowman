@@ -14,7 +14,7 @@ package
 	 */
 	public class SnowOverlay extends Sprite
 	{		
-		private var MAX_SNOWFLAKES = 1000;
+		private var MAX_SNOWFLAKES = 100;
 		private var snowflakeTexture = Texture.fromAsset("assets/snowflake.png");
 		private var time = 0;
 		

@@ -129,6 +129,13 @@ package  {
 		public function getPosition():Point {
 			return p;
 		}
+		
+		override public function destroy():Boolean {
+			if (!super.destroy()) return false;
+			display.removeFromParent();
+			return true;
+		}
+		
 	}
 	
 }
