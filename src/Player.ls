@@ -82,7 +82,7 @@ package  {
 			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].advanceTime(dt * v.length * 0.02);
-				if (!moving) {
+				if (!moving || anims[i].currentFrame == 3) {
 					anims[i].currentFrame = 0;
 				}
 			}
