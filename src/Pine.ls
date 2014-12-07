@@ -19,7 +19,7 @@ package
 		private static var shadowTexture:Texture = null;
 		private static var shadowTextureOverlay:Texture = null;
 		
-		private static const MAX_OVERLAY_TIME = 10;
+		private static const MAX_OVERLAY_TIME = 30;
 		private var overlayTime:Number = 0;
 		private var display:Sprite = new Sprite();
 		private var image:Image;
@@ -79,7 +79,16 @@ package
 		/* INTERFACE IHittable */
 		
 		public function hit():void 
-		{
+		{	
+			var dropCount = Math.floor((overlayTime / MAX_OVERLAY_TIME) * 3);
+			trace("drop count", dropCount);
+			
+			for (var i = 0; i < dropCount; i++)
+			{
+				trace(p.x + i % 2 * ( -1) * 8, p.y + 4);
+				environment.addSnowball(p.x + (i % 2 * 2 - 1) * Math.floor((i+1) / 2) * 12, p.y + 8);
+			}
+			
 			overlayTime = 0;
 		}
 		
