@@ -272,7 +272,8 @@ package  {
 					if (snowball.checkCollision(pine))
 					{
 						pine.hit();
-						snowball.destroy();
+						if(!snowball.isYellowSnow())
+							snowball.destroy();
 					}
 				}
 				
@@ -290,7 +291,8 @@ package  {
 					ai = ais[j];
 					if (snowball.checkCollision(ai)) {
 						ai.destroy();
-						snowball.destroy();
+						if(!snowball.isYellowSnow())
+							snowball.destroy();
 					}
 				}
 			}

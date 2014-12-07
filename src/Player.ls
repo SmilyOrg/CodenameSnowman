@@ -72,9 +72,14 @@ package  {
 			if (chargeTimer >= 0)
 			{
 				progressFg.clipRect = new Rectangle(0, 0, (chargeTimer / chargeTime) * progressFgTexture.width, progressFgTexture.height);
-				(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
+				
 				progressBg.visible = true;
 				progressFg.visible = true;
+				
+				if(chargeTimer >= maxCharge)
+					(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
+				else
+					(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
 			}
 			else
 			{
@@ -86,10 +91,13 @@ package  {
 		}
 		
 		public function charge() {
-			chargeTimer = 0;
-			speed = 1500;
-			chargeSound.play();
-			endMakingSnowball();
+			if (environment.getSnowballUi().numOfSnowballs() > 0)
+			{
+				chargeTimer = 0;
+				speed = 1500;
+				chargeSound.play();
+				endMakingSnowball();
+			}
 		}
 		
 		public function resetCharge() {

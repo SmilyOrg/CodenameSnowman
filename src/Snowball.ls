@@ -16,6 +16,11 @@ package
 		private var shadowImage:Image;
 		private static var texture:Texture;
 		private static var shadowTexture:Texture;
+		private var yellowSnow:Boolean = false;
+		private static const MAX_TIME = 1.0;
+		private static const MIN_TIME = 0.33;
+		private var time:Number;
+		private var initTime:Number;
 		
 		public function Snowball(container:DisplayObjectContainer, origin:Point, direction:Point, charge:Number, maxCharge:Number) 
 		{
@@ -33,9 +38,16 @@ package
 			
 			direction.normalize();
 			
-			var speed = 240;
+			time = MIN_TIME + (charge / maxCharge) * (MAX_TIME - MIN_TIME);
+			initTime = time;
 			
-			if (charge == maxCharge) image.color = 0xDFDF00;
+			if (charge >= maxCharge)
+			{
+				image.color = 0xDFDF00;
+				yellowSnow = true;
+			}
+			
+			var speed = yellowSnow ? 360 : 240;
 			
 			v.x = direction.x * speed;
 			v.y = direction.y * speed;
@@ -45,15 +57,42 @@ package
 			bounds = new Rectangle( -4, -4, 8, 8);
 		}
 		
+		override public function tick(t:Number, dt:Number):void
+		{
+			time -= dt;
+			
+			if (time <= 0 && !yellowSnow)
+			{
+				destroy();
+				var hole = new SnowballHole();
+				hole.setPosition(p.x, p.y);
+				
+				environment.addEntity(hole);
+			}
+			
+			super.tick(t, dt);
+		}
+		
 		override public function render(t:Number):void
 		{
-			image.x = p.x + bounds.left;
-			image.y = p.y + bounds.top;
 			
-			shadowImage.x = image.x + 4;
-			shadowImage.y = image.y - 6;
+			var factor = time / initTime;
+			
+			if (yellowSnow)
+				factor = 1;
+			
+			image.x = p.x + bounds.left;
+			image.y = p.y + bounds.top + Math.floor(8 * (1-factor));
+			
+			shadowImage.x = image.x + Math.floor(6 * factor);
+			shadowImage.y = image.y - Math.floor(8 * factor);
 			
 			super.render(t);
+		}
+		
+		public function isYellowSnow():Boolean
+		{
+			return yellowSnow;
 		}
 		
 		public function destroy():Boolean
