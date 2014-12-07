@@ -35,13 +35,13 @@ package  {
 			
 			anims = new Vector.<AnimActor>();
 			anims.push(new AnimActor("assets/eskimo-walk.png"));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 7));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 3));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 4));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 5));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 6));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 6));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
 			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].play();
