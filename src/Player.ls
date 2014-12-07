@@ -74,20 +74,25 @@ package  {
 				}
 			}
 			
+			basic.tick(t, dt, this);
+			super.tick(t, dt);
+			
 			if (chargeTimer >= 0)
 			{
 				progressFg.clipRect = new Rectangle(0, 0, (chargeTimer / chargeTime) * progressFgTexture.width, progressFgTexture.height);
-				(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
+				
 				progressBg.visible = true;
 				progressFg.visible = true;
+				
+				if(chargeTimer >= maxCharge)
+					(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
+				else
+					(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
 			}
 			else
 			{
 				(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
 			}
-			
-			basic.tick(t, dt, this);
-			super.tick(t, dt);
 		}
 		
 		public function charge() {
