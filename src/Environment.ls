@@ -17,7 +17,6 @@ package  {
 		private var h:int;
 		
 		private var background:Image;
-		private var cursor:Sprite;
 		
 		private var shadowLayer:Sprite = new Sprite();
 		private var fogLayer:Sprite = new Sprite();
@@ -61,9 +60,6 @@ package  {
 			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
 			ground.addChild(background);
 			
-			cursor = new Sprite();
-			cursor.addChild(new Image(Texture.fromAsset("assets/cursor.png")));
-			
 			addEntity(player = new Player(display));
 			addEntity(walls = new Walls());
 			addEntity(flag = new Flag());
@@ -79,9 +75,9 @@ package  {
 			
 			addPine(50, 40);
 			addPine(75, 60);
-			addPine(30, 75);
+			addPine(25, 75);
 			addPine(600, 60);
-			addPine(580, 90);
+			addPine(570, 90);
 			addPine(605, 330);
 			addPine(35, 340);
 			addPine(75, 285);
@@ -112,7 +108,6 @@ package  {
 			stage.addChild(display);
 			stage.addChild(fogLayer);
 			stage.addChild(ui);
-			stage.addChild(cursor);
 			
 			var wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 2, 20);
@@ -138,13 +133,6 @@ package  {
 			reset();
 		}
 		
-		public function setCursorPosition(t:Touch)
-		{
-			var pos = t.getLocation(ground);
-			cursor.x = pos.x - cursor.width / 2;
-			cursor.y = pos.y - cursor.height / 2;
-		}
-		
 		public function addPine(x:int, y:int)
 		{
 			var pine = new Pine(display);
@@ -163,6 +151,7 @@ package  {
 		}
 		
 		public function addAI(ai:AI) {
+			ai.onSnowball += throwSnowball;
 			ais.push(ai);
 			entities.push(ai);
 		}
@@ -223,9 +212,7 @@ package  {
 				case 44: // space
 					if (snowballUi.throwSnowball())
 					{
-						var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
-						snowballs.push(snowball);
-						addEntity(snowball);
+						throwSnowball(player, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
 						player.resetCharge();
 					}
 					break;
@@ -237,6 +224,13 @@ package  {
 					}
 					break;
 			}
+		}
+		
+		private function throwSnowball(owner:Actor, position:Point, velocity:Point, charge:Number, maxCharge:Number) {
+			//trace(position, velocity, charge, maxCharge);
+			var snowball = new Snowball(display, owner, position, velocity, charge, maxCharge);
+			snowballs.push(snowball);
+			addEntity(snowball);
 		}
 		
 		public override function tick(t:Number, dt:Number) {
@@ -293,7 +287,7 @@ package  {
 				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
-					if (snowball.checkCollision(ai)) {
+					if (snowball.checkCollision(ai) && snowball.owner != ai) {
 						ai.destroy();
 						if(!snowball.isYellowSnow())
 							snowball.destroy();

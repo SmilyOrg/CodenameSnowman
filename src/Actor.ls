@@ -6,6 +6,8 @@ package  {
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
+	public delegate SnowballThrow(owner:Actor, position:Point, velocity:Point, charge:Number, maxCharge:Number);
+	
 	public class Actor extends Entity {
 		
 		public static const STATE_THROWING = 3;
@@ -14,6 +16,8 @@ package  {
 		public var moveDown:Boolean = false;
 		public var moveLeft:Boolean = false;
 		public var moveRight:Boolean = false;
+		
+		public var onSnowball:SnowballThrow;
 		
 		protected var isMakingSnowball:Boolean = false;
 		protected var snowballProgress:Number = 0;
@@ -130,6 +134,7 @@ package  {
 			if (!super.destroy()) return false;
 			progressBg.removeFromParent();
 			progressFg.removeFromParent();
+			onSnowball = null;
 			return true;
 		}
 	}

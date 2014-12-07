@@ -8,23 +8,31 @@ package  {
 	public class ThinkyAI extends AI {
 		
 		private var STATE_WANDER = 10;
+		private var STATE_AIMING = 11;
 		
 		private var basic:BasicActor;
 		
-		public function ThinkyAI(container:DisplayObjectContainer) {
+		private var aimTimer = 0;
+		private var aimTime = 0.2;
+		private var difficulty:Number;
+		
+		public function ThinkyAI(container:DisplayObjectContainer, difficulty:Number = 1) {
+			this.difficulty = difficulty;
 			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
 			bounds = new Rectangle(-10, -16, 20, 32);
 			basic.handleDirection(v);
 		}
 		
+		private function changeDirection(directionality:Number = 0.25) {
+			var deadzone = 20;
+			moveLeft = Math.random() > (target.x > p.x+deadzone ? 0.5+directionality : target.x < p.x-deadzone ? 0.5-directionality : 1);
+			moveRight = Math.random() > (target.x > p.x+deadzone ? 0.5-directionality : target.x < p.x-deadzone ? 0.5+directionality : 1);
+			moveUp = Math.random() > (target.y > p.y+deadzone ? 0.5+directionality : target.y < p.y-deadzone ? 0.5-directionality : 1);
+			moveDown = Math.random() > (target.y > p.y+deadzone ? 0.5-directionality : target.y < p.y-deadzone ? 0.5+directionality : 1);
+		}
 		
-		
-		private function changeDirection() {
-			var directionality = 0.25;
-			moveLeft = Math.random() > (target.x > p.x ? 0.5+directionality : 0.5-directionality);
-			moveRight = Math.random() > (target.x < p.x ? 0.5+directionality : 0.5-directionality);
-			moveUp = Math.random() > (target.y > p.y ? 0.5+directionality : 0.5-directionality);
-			moveDown = Math.random() > (target.y < p.y ? 0.5+directionality : 0.5-directionality);
+		private function getParam(min:Number, max:Number):Number {
+			return min+(max-min)*(1-Math.exp(-difficulty));
 		}
 		
 		override public function tick(t:Number, dt:Number) {
@@ -34,17 +42,28 @@ package  {
 			switch (state) {
 				case STATE_IDLE:
 					moveLeft = moveRight = moveUp = moveDown = false;
-					if (Math.random() < 0.01) {
+					if (Math.random() < getParam(0.01, 0.2)) {
 						state = STATE_WANDER;
 						changeDirection();
+					} else if (Math.random() < getParam(0.005, 0.2)) {
+						state = STATE_AIMING;
+					}
+					break;
+				case STATE_AIMING:
+					changeDirection(1);
+					aimTimer += dt;
+					if (aimTimer > aimTime*getParam(1, 0.5)) {
+						aimTimer = 0;
+						onSnowball(this, p, v, 0, 1);
+						state = STATE_IDLE;
 					}
 					break;
 				case STATE_WANDER:
-					if (Math.random() < 0.02) {
+					if (Math.random() < getParam(0.01, 0.03)) {
 						state = STATE_IDLE;
 					}
 					
-					if (Math.random() < 0.1) {
+					if (Math.random() < getParam(0.05, 0.3)) {
 						changeDirection();
 					}
 					

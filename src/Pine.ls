@@ -41,7 +41,8 @@ package
 			overlay = new Image(textureOverlay);
 			display.addChild(overlay);
 			
-			overlay.y = image.y = -image.height+4;
+			overlay.y = image.y = -image.height + 4;
+			overlay.x = image.x = -image.width / 2;
 			
 			container.addChild(display);
 			
@@ -54,7 +55,18 @@ package
 			a = new Point(0, 0);
 			p = new Point(100, 100);
 			
-			bounds = new Rectangle(27, image.y, 8, 48);
+			bounds = new Rectangle( -16, -60, 32, 60);
+		}
+		
+		override public function setPosition(x:Number, y:Number)
+		{
+			super.setPosition(x, y);
+			
+			if (children != null)
+				children.clear();
+				
+			addCollisionEntity(p.x, p.y, -2, -40, 4, 25);
+			addCollisionEntity(p.x, p.y, -10, -25, 20, 10);
 		}
 		
 		public override function tick(t:Number, dt:Number):void
@@ -72,7 +84,7 @@ package
 			display.x = p.x;
 			display.y = p.y;
 			
-			shadow.x = display.x + 12;
+			shadow.x = display.x + 12 + image.x;
 			shadow.y = display.y + image.y;
 		}
 		
