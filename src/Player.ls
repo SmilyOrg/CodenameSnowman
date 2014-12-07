@@ -46,7 +46,7 @@ package  {
 			var path = "assets/particles/coldy-breath.pex";
 			var tex = Texture.fromAsset("assets/particles/coldy-breath.png");
 			pdps = PDParticleSystem.loadLiveSystem(path, tex);
-			container.addChild(pdps);
+			environment.getFogLayer().addChild(pdps);
 		}
 		
 		override public function tick(t:Number, dt:Number) {
@@ -56,12 +56,16 @@ package  {
 			if (breathTime > breathDelay) {
 				pdps.emitterX = p.x + (emmiterLocations[currDir].x - 16);
 				pdps.emitterY = p.y + (emmiterLocations[currDir].y - 16);
-				trace(currDir + " | " + (emmiterLocations[currDir].x - 16) + " : " + (emmiterLocations[currDir].y - 16));
 				pdps.populate(5, 0);
 				breathTime -= breathDelay;
-				trace("PUFF PUFF PASS!");
 			}
 			breathTime += dt;
+			
+			if (state != Actor.STATE_THROWING && cd < cdTreshold && cd >= 0) {
+				cd += dt;
+			} else if (cd >= cdTreshold) {
+				cd = -1;
+			}
 			
 			if (chargeTimer != -1) {
 				chargeTimer = Math.min(chargeTime, chargeTimer+dt);
@@ -70,30 +74,27 @@ package  {
 				}
 			}
 			
-			basic.tick(t, dt, p, v);
-			super.tick(t, dt);
-			
 			if (chargeTimer >= 0)
 			{
 				progressFg.clipRect = new Rectangle(0, 0, (chargeTimer / chargeTime) * progressFgTexture.width, progressFgTexture.height);
-				
+				(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
 				progressBg.visible = true;
 				progressFg.visible = true;
-				
-				if(chargeTimer >= maxCharge)
-					(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
-				else
-					(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
 			}
 			else
 			{
 				(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
 			}
+			
+			basic.tick(t, dt, this);
+			super.tick(t, dt);
 		}
 		
 		public function charge() {
 			if (environment.getSnowballUi().numOfSnowballs() > 0)
 			{
+				state = Actor.STATE_THROWING;
+				cd = 0;
 				chargeTimer = 0;
 				speed = 1500;
 				chargeSound.play();
@@ -105,6 +106,7 @@ package  {
 			chargeTimer = -1;
 			speed = 3000;
 			chargeSound.stop();
+			state = Entity.STATE_IDLE;
 		}
 		
 		public function get currentCharge():Number {

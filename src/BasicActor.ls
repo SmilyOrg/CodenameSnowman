@@ -25,13 +25,13 @@ package  {
 			
 			anims = new Vector.<AnimActor>();
 			anims.push(new AnimActor("assets/eskimo-walk.png"));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 7));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 3));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 4));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 5));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 6));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 7));
 			
 			animsShadow = new Vector.<AnimActor>();
 			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 0));
@@ -54,7 +54,9 @@ package  {
 			}
 		}
 		
-		public function tick(t:Number, dt:Number, p:Point, v:Point) {
+		public function tick(t:Number, dt:Number, a:Actor) {
+			var v = a.getVelocity();
+			var p = a.getPosition();
 			if (moving0 && v.length > 70)
 			{
 				direction = v;
@@ -76,12 +78,24 @@ package  {
 			}
 			moving0 = moving;
 			
+			//ANIMATION LOOP
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].advanceTime(dt * v.length * 0.02);
 				animsShadow[i].advanceTime(dt * v.length * 0.02);
-				if (!moving || anims[i].currentFrame == 3) {
-					anims[i].currentFrame = 0;
-					animsShadow[i].currentFrame = 0;
+				if (a.state == Actor.STATE_THROWING) {
+					anims[i].currentFrame = 4;
+					animsShadow[i].currentFrame = 4;
+				} else if (a.onCooldown()) {
+					anims[i].currentFrame = 5;
+					animsShadow[i].currentFrame = 5;
+				} else {
+					if (!moving || anims[i].currentFrame == 4) {
+						anims[i].currentFrame = 0;
+						animsShadow[i].currentFrame = 0;
+					} else if (anims[i].currentFrame > 5) {
+						anims[i].currentFrame = 0;
+						animsShadow[i].currentFrame = 0;
+					}
 				}
 			}
 		}
