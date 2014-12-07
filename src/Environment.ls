@@ -107,6 +107,9 @@ package  {
 				case 8: // E
 					player.startMakingSnowball();
 					break;
+				case 44: // Space
+					player.charge();
+					break;
 			}
 		}
 		
@@ -135,6 +138,11 @@ package  {
 						snowballs.push(snowball);
 						addEntity(snowball);
 					}
+				case 44: // Space
+					var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
+					snowballs.push(snowball);
+					addEntity(snowball);
+					player.resetCharge();
 					break;
 			}
 		}
@@ -216,7 +224,6 @@ package  {
 				var entity = vector[i];
 				if (entity.state == Entity.STATE_DESTROYED) {
 					vector.splice(i, 1);
-					entity.destroy();
 				}
 			}
 		}
