@@ -72,7 +72,7 @@ package  {
 			entities.push(ai);
 		}
 		
-		private function addEntity(entity:Entity) {
+		public function addEntity(entity:Entity) {
 			entities.push(entity);
 		}
 		
@@ -126,6 +126,9 @@ package  {
 		public override function tick(t:Number, dt:Number) {
 			var ai:AI;
 			
+			var i:int;
+			var j:int;
+			
 			spawnTimer += dt;
 			if (spawnTimer > spawnTime && ais.length < spawnMax) {
 				spawnTimer = 0;
@@ -136,16 +139,15 @@ package  {
 				addAI(ai);
 			}
 			
-			player.tick(t, dt);
-			pine.tick(t, dt);
-			snowOverlay.tick(dt);
+			for (i = 0; i < entities.length; i++) {
+				var entity:Entity = entities[i];
+				entity.tick(t, dt);
+			}
 			
-			var i:int;
-			var j:int;
+			snowOverlay.tick(dt);
 			
 			for (i = 0; i < snowballs.length; i++) {
 				var snowball = snowballs[i];
-				snowball.tick(t, dt);
 				if (snowball.checkCollision(pine))
 				{
 					pine.hit();
@@ -170,12 +172,6 @@ package  {
 			for (i = 0; i < ais.length; i++) {
 				ai = ais[i];
 				ai.target = playerPos;
-				ai.tick(t, dt);
-			}
-			
-			for (i = 0; i < entities.length; i++) {
-				var entity:Entity = entities[i];
-				entity.tick(t, dt);
 			}
 			
 			flush();
