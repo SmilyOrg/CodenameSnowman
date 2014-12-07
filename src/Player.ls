@@ -28,17 +28,19 @@ package  {
 														new Point(24, 18) //up-left
 													];
 		private var activeAnim:AnimActor;
-		private var direction0:int = 2;
+		//private var direction:int = 2;
 		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
 			
 			anims = new Vector.<AnimActor>();
 			anims.push(new AnimActor("assets/eskimo-walk.png"));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 3));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 4));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 5));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 6));
 			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].play();
@@ -129,13 +131,6 @@ package  {
 		public function getPosition():Point {
 			return p;
 		}
-		
-		override public function destroy():Boolean {
-			if (!super.destroy()) return false;
-			display.removeFromParent();
-			return true;
-		}
-		
 	}
 	
 }
