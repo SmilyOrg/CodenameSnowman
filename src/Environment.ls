@@ -301,7 +301,7 @@ package  {
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
 					if (snowball.checkCollision(ai) && snowball.owner != ai) {
-						//ai.destroy();
+						ai.destroy();
 						if(!snowball.isYellowSnow())
 							snowball.destroy();
 					}
