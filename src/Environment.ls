@@ -284,6 +284,13 @@ package  {
 			stopped = true;
 		}
 		
+		private function defeat()
+		{
+			setMessage("You were defeated!", restart);
+			started = false;
+			stopped = true;
+		}
+		
 		private function restart()
 		{
 			trace("restart");
@@ -297,7 +304,8 @@ package  {
 		
 		public override function tick(t:Number, dt:Number) {
 			
-			snowOverlay.tick(dt);
+			if(!stopped)
+				snowOverlay.tick(dt);
 			snowballUi.tick(t, dt);
 			messageUI.tick(t, dt);
 			whiteoutUI.tick(t, dt);
@@ -324,8 +332,7 @@ package  {
 			{
 				if (started)
 				{
-					setMessage("Victory!", restart);
-					started = false;
+					victory();
 				}
 			}
 			
@@ -411,10 +418,21 @@ package  {
 				}
 			}
 			
+			flag.isBeingTaken = false;
 			var playerPos:Point = player.getPosition();
 			for (i = 0; i < ais.length; i++) {
 				ai = ais[i];
 				ai.target = playerPos;
+				
+				if (Point.distance(ai.getPosition(), flag.getPosition()) < 12)
+				{
+					flag.isBeingTaken = true;
+				}
+			}
+			
+			if (flag.isTaken() && !stopped)
+			{
+				defeat();
 			}
 			
 			flush();
