@@ -27,11 +27,11 @@ package  {
 		
 		private var ais = new Vector.<AI>();
 		private var player:Player;
-		private var pine:Pine;
 		private var walls:Walls;
 		private var flag:Flag;
 		private var snowballs = new Vector.<Snowball>();
 		private var snowballItems = new Vector.<SnowballItem>();
+		private var pines = new Vector.<Pine>();
 		
 		private var entities = new Vector.<Entity>();
 		
@@ -55,18 +55,27 @@ package  {
 			ground.addChild(background);
 			
 			addEntity(player = new Player(display));
-			addEntity(pine = new Pine(display));
 			addEntity(walls = new Walls());
 			addEntity(flag = new Flag());
 			
-			addSnowball(310, 180);
-			addSnowball(330, 180);
-			addSnowball(320, 190);
-			addSnowball(320, 170);
-			addSnowball(310, 170);
-			addSnowball(310, 190);
-			addSnowball(330, 170);
-			addSnowball(330, 190);
+			addSnowball(307, 180, false);
+			addSnowball(333, 180, false);
+			addSnowball(320, 193, false);
+			addSnowball(320, 167, false);
+			addSnowball(310, 170, false);
+			addSnowball(310, 190, false);
+			addSnowball(330, 170, false);
+			addSnowball(330, 190, false);
+			
+			addPine(50, 40);
+			addPine(75, 60);
+			addPine(30, 75);
+			addPine(600, 60);
+			addPine(580, 90);
+			addPine(605, 330);
+			addPine(40, 340);
+			addPine(60, 290);
+			addPine(100, 330);
 			
 			
 			arena = new Entity();
@@ -96,9 +105,18 @@ package  {
 			reset();
 		}
 		
-		private function addSnowball(x:int, y:int)
+		public function addPine(x:int, y:int)
 		{
-			var snowball = new SnowballItem();
+			var pine = new Pine(display);
+			pine.setPosition(x, y);
+			pines.push(pine);
+			addEntity(pine);
+			
+		}
+		
+		public function addSnowball(x:int, y:int, fades:Boolean = true)
+		{
+			var snowball = new SnowballItem(fades);
 			snowball.setPosition(x, y);
 			snowballItems.push(snowball);
 			addEntity(snowball);
@@ -174,10 +192,8 @@ package  {
 				case 10: // G
 					if (snowballUi.throwSnowball())
 					{
-						var sb = new SnowballItem();
-						sb.setPosition(player.getPosition().x, player.getPosition().y + 12);
-						snowballItems.push(sb);
-						addEntity(sb);
+						var pos = player.getPosition();
+						addSnowball(pos.x, pos.y + 12, false);
 					}
 					break;
 			}
@@ -211,17 +227,22 @@ package  {
 			
 			for (i = 0; i < snowballs.length; i++) {
 				var snowball = snowballs[i];
-				if (snowball.checkCollision(pine))
+				
+				for (j = 0; j < pines.length; j++)
 				{
-					pine.hit();
-					snowball.destroy();
+					var pine = pines[j];
+					if (snowball.checkCollision(pine))
+					{
+						pine.hit();
+						snowball.destroy();
+					}
 				}
 				
 				if (!snowball.checkCollision(arena))
 				{
 					snowball.destroy();
 				}
-				//
+				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
 					if (snowball.checkCollision(ai)) {
