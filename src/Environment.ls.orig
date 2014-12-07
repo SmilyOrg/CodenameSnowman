@@ -4,15 +4,10 @@ package  {
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
 	import loom2d.math.Point;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	public class Environment {
-		
-		/** Simulation delta time */
-		private var dt = 1/60;
-		
-		/** Simulation time */
-		private var t = 0;
 		
 		private var w:int;
 		private var h:int;
@@ -21,37 +16,55 @@ package  {
 		
 		private var display:Sprite = new Sprite();
 		
+		private var arena:Entity;
+		
 		private var ais = new Vector.<AI>();
 		private var player:Player;
 		private var pine:Pine;
-		private var snowball:Snowball;
+		private var snowballs = new Vector.<Snowball>();
+		
+		private var entities = new Vector.<Entity>();
+		
+		private var snowOverlay:SnowOverlay;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
 			this.h = h;
 			
-			background = new Image(Texture.fromAsset("assets/background.png"));
+<<<<<<< Updated upstream
+			background = new Image(Texture.fromAsset("assets/bg_ui.png"));
+=======
+			Entity.environment = this;
 			
+			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
+>>>>>>> Stashed changes
 			display.addChild(background);
 			
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
-			ais.push(new SimpleAI(display));
+			for (var i:int = 0; i < 3; i++) {
+				var ai = new SimpleAI(display);
+				ais.push(ai);
+				addEntity(ai);
+			}
 			
-			player = new Player(display);
-			pine = new Pine(display);
-			snowball = null;
+			addEntity(player = new Player(display));
+			addEntity(pine = new Pine(display));
+			
+			arena = new Entity();
+			arena.bounds = new Rectangle(0, 0, background.width, background.height);
+			
+			snowOverlay = new SnowOverlay();
+			display.addChild(snowOverlay);
+			snowOverlay.initialize(w, h);
 			
 			display.scale = 2;
 			
 			stage.addChild(display);
-<<<<<<< HEAD
-=======
 			
-			stage.addChild(pine);
 			reset();
+		}
+		
+		private function addEntity(entity:Entity) {
+			entities.push(entity);
 		}
 		
 		public function reset() {
@@ -60,7 +73,6 @@ package  {
 				ai.setPosition(w*0.5, h*0.25);
 			}
 			player.setPosition(w*0.5, h*0.5);
->>>>>>> e52c747f6ab26dd068ddfbf30387b445a1052495
 		}
 		
 		public function onKeyDown(e:KeyboardEvent) {
@@ -81,7 +93,6 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
-			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -96,45 +107,76 @@ package  {
 					player.moveRight = false;
 					break;
 				case 44:
-					if(snowball == null)
-						snowball = new Snowball(display);
+					var snowball = new Snowball(display, player.getPosition(), player.getDirection());
+					snowballs.push(snowball);
+					addEntity(snowball);
 					break;
 			}
 		}
 		
-		public function tick() {
+		public override function tick(t:Number, dt:Number) {
 			player.tick(t, dt);
-<<<<<<< HEAD
 			pine.tick(t, dt);
+			snowOverlay.tick(dt);
 			
-			if (snowball != null)
-			{
+			var i:int;
+			var j:int;
+			var ai:AI;
+			
+			for (i = 0; i < snowballs.length; i++) {
+				var snowball = snowballs[i];
 				snowball.tick(t, dt);
 				if (snowball.checkCollision(pine))
 				{
 					pine.hit();
 					snowball.destroy();
-					snowball = null;
 				}
-=======
+				
+				if (!snowball.checkCollision(arena))
+				{
+					snowball.destroy();
+				}
+				//
+				for (j = 0; j < ais.length; j++) {
+					ai = ais[j];
+					if (snowball.checkCollision(ai)) {
+						ai.destroy();
+						snowball.destroy();
+					}
+				}
+			}
 			
-			pine.tick(dt);
 			var playerPos:Point = player.getPosition();
-			for (var i:int = 0; i < ais.length; i++) {
-				var ai = ais[i];
+			for (i = 0; i < ais.length; i++) {
+				ai = ais[i];
 				ai.target = playerPos;
 				ai.tick(t, dt);
->>>>>>> e52c747f6ab26dd068ddfbf30387b445a1052495
 			}
+			
+			flush();
 			
 			t += dt;
 		}
 		
-		public function render() {
-			player.render(t);
-			for (var i:int = 0; i < ais.length; i++) {
-				var ai = ais[i];
-				ai.render(t);
+		public override function render(t:Number) {
+			for (var i = 0; i < entities.length; i++) {
+				var entity = entities[i];
+				entity.render(t);
+			}
+		}
+		
+		private function flush() {
+			removeCorpses(entities);
+			removeCorpses(ais);
+			removeCorpses(snowballs);
+		}
+		
+		private function removeCorpses(vector:Vector.<Entity>) {
+			for (var i = vector.length-1; i >= 0; i--) {
+				var entity = vector[i];
+				if (entity.state == Entity.STATE_DESTROYED) {
+					vector.splice(i, 1);
+				}
 			}
 		}
 		
