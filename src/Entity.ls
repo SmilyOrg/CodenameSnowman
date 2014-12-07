@@ -52,6 +52,19 @@ package
 			return p;
 		}
 		
+		protected function addCollisionEntity(px:int, py:int, x:int, y:int, w:int, h:int)
+		{
+			var entity = new Entity();
+			entity.p.x = px;
+			entity.p.y = py;
+			entity.bounds = new Rectangle(x, y, w, h);
+			
+			if(children == null)
+				children = new Vector.<Entity>();
+			
+			children.push(entity);
+		}
+		
 		/** Set sound position and velocity to entity position and velocity */
 		protected function placeSound(sound:Sound)
 		{

@@ -74,18 +74,14 @@ package  {
 			
 			addPine(50, 40);
 			addPine(75, 60);
-			addPine(30, 75);
+			addPine(25, 75);
 			addPine(600, 60);
-			addPine(580, 90);
+			addPine(570, 90);
 			addPine(605, 330);
 			addPine(35, 340);
 			addPine(75, 285);
 			addPine(110, 330);			
 			
-			//addAI(new ThinkyAI(display, 10));
-			//addAI(new ThinkyAI(display, 1));
-			//addAI(new ThinkyAI(display, 10));
-			//addAI(new ThinkyAI(display, 100));
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
 			
@@ -289,6 +285,7 @@ package  {
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
 					if (snowball.checkCollision(ai) && snowball.owner != ai) {
+					if (snowball.checkCollision(ai)) {
 						ai.destroy();
 						if(!snowball.isYellowSnow())
 							snowball.destroy();

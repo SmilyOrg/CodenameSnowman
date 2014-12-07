@@ -36,8 +36,6 @@ package
 			
 			environment.getDisplay().addChild(image);
 			
-			children = new Vector.<Entity>();
-			
 			addCollisionEntity(p.x, p.y, -95, - 35, 64, 5);
 			addCollisionEntity(p.x, p.y, -95, - 35, 5, 70);
 			addCollisionEntity(p.x, p.y, -95, 30, 64, 5);
@@ -45,16 +43,6 @@ package
 			addCollisionEntity(p.x, p.y, 31, - 35, 64, 5);
 			addCollisionEntity(p.x, p.y, 90, - 35, 5, 70);
 			addCollisionEntity(p.x, p.y, 31, 30, 64, 5);
-		}
-		
-		private function addCollisionEntity(px:int, py:int, x:int, y:int, w:int, h:int)
-		{
-			var entity = new Entity();
-			entity.p.x = px;
-			entity.p.y = py;
-			entity.bounds = new Rectangle(x, y, w, h);
-			
-			children.push(entity);
 		}
 		
 		override public function tick(t:Number, dt:Number)
