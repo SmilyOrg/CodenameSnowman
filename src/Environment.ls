@@ -31,7 +31,7 @@ package  {
 			this.w = w;
 			this.h = h;
 			
-			background = new Image(Texture.fromAsset("assets/bg_ui.png"));
+			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
 			display.addChild(background);
 			
 			for (var i:int = 0; i < 3; i++) {
