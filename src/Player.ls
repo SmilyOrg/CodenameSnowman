@@ -28,7 +28,7 @@ package  {
 														new Point(24, 18) //up-left
 													];
 		private var activeAnim:AnimActor;
-		//private var direction:int = 2;
+		private var currDir:int = 2;
 		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
@@ -49,10 +49,7 @@ package  {
 				container.addChild(anims[i]);
 			}
 			
-			/*display = new AnimActor("assets/eskimo-walk.png");
-			display.play();
-			display.center();
-			container.addChild(display);*/
+			handleDirection();
 			
 			var path = "assets/particles/coldy-breath.pex";
 			var tex = Texture.fromAsset("assets/particles/coldy-breath.png");
@@ -66,8 +63,9 @@ package  {
 			//Player breath
 			var breathDelay = 2;
 			if (breathTime > breathDelay) {
-				pdps.emitterX = this.getPosition().x;
-				pdps.emitterY = this.getPosition().y;
+				pdps.emitterX = p.x + (emmiterLocations[currDir].x - 16);
+				pdps.emitterY = p.y + (emmiterLocations[currDir].y - 16);
+				trace(currDir + " | " + (emmiterLocations[currDir].x - 16) + " : " + (emmiterLocations[currDir].y - 16));
 				pdps.populate(5, 0);
 				breathTime -= breathDelay;
 				trace("PUFF PUFF PASS!");
@@ -102,6 +100,7 @@ package  {
 		private function handleDirection() {
 			var angle = Math.round(((Math.atan2(direction.x, -direction.y)) % Math.TWOPI / Math.TWOPI) * 8);
 			angle = angle == 8 ? 0 : angle;
+			currDir = angle;
 			
 			
 			for (var i = 0; i < anims.length; i++) {

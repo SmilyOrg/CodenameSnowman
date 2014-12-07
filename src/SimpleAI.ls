@@ -30,6 +30,8 @@ package  {
 				container.addChild(anims[i]);
 			}
 			
+			handleDirection();
+			
 			speed *= 0.7;
 			bounds.x = -8;
 			bounds.y = -8;
