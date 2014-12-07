@@ -2,6 +2,7 @@ package  {
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
 	import loom2d.math.Point;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	public class ThinkyAI extends AI {
@@ -12,6 +13,7 @@ package  {
 		
 		public function ThinkyAI(container:DisplayObjectContainer) {
 			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
+			bounds = new Rectangle(-10, -16, 20, 32);
 			basic.handleDirection(v);
 		}
 		

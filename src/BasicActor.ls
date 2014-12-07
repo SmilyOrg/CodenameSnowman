@@ -117,8 +117,8 @@ package  {
 				anims[i].x = p.x;
 				anims[i].y = p.y;
 				
-				animsShadow[i].x = p.x + 10;
-				animsShadow[i].y = p.y;
+				animsShadow[i].x = p.x + 9;
+				animsShadow[i].y = p.y + 1;
 			}
 		}
 		

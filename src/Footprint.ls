@@ -31,6 +31,8 @@ package
 			image = new Image(texture);
 			
 			environment.getGround().addChild(image);
+			
+			isCollidable = false;
 		}
 		
 		override public function tick(t:Number, dt:Number)
