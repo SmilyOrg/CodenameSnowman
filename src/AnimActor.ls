@@ -11,13 +11,15 @@ package
 	public class AnimActor extends MovieClip
 	{
 		
-		public function AnimActor(path:String, spriteCount:int = 1) 
+		public function AnimActor(path:String, spriteWidth:int = 32, spriteHeight:int = 32, spriteRow:int = 0) 
 		{
 			var tex = Texture.fromAsset(path);
 			var textures = new Vector.<Texture>();
-			var spriteWidth = tex.width / spriteCount;
+			var spriteCount = tex.width / spriteWidth;
+			spriteRow = spriteRow < 0 ? 0 : spriteRow;
+			spriteRow = spriteRow >= tex.height / spriteHeight ? tex.height / spriteHeight : spriteRow;
 			for (var i = 0; i < spriteCount; i++) {
-				textures.push(Texture.fromTexture(tex, new Rectangle(i * spriteWidth, 0, spriteWidth, tex.height)));
+				textures.push(Texture.fromTexture(tex, new Rectangle(i * spriteWidth, spriteRow*spriteHeight, spriteWidth, spriteHeight)));
 			}
 			super(textures, 5);
 			//loop = false;

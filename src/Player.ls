@@ -3,7 +3,6 @@ package  {
 	import loom.sound.Sound;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
-	import loom2d.Loom2D;
 	import loom2d.math.Color;
 	import loom2d.math.Point;
 	import loom2d.textures.Texture;
@@ -15,48 +14,98 @@ package  {
 		private var display:AnimActor;
 		private var pdps:PDParticleSystem;
 		private var direction:Point = new Point(1, 0);
+		private var breathTime:Number = 0;
+		private var anims:Vector.<AnimActor>;
+		private var animDirections:Vector.<int> = [0, 0, 2, 2, 1, 1, 3, 3];
+		private var activeAnim:AnimActor;
+		private var direction0:int = 2;
 		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
-			display = new AnimActor("assets/eskimo-walk.png", 4);
+			
+			anims = new Vector.<AnimActor>();
+			anims.push(new AnimActor("assets/eskimo-walk.png"));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
+			
+			for (var i = 0; i < anims.length; i++) {
+				anims[i].play();
+				anims[i].center();
+				container.addChild(anims[i]);
+			}
+			
+			/*display = new AnimActor("assets/eskimo-walk.png");
 			display.play();
 			display.center();
-			container.addChild(display);
+			container.addChild(display);*/
 			
 			var path = "assets/particles/coldy-breath.pex";
-			var config = new XMLDocument();
-			config.loadFile(path);
-			var basePath = Path.folderFromPath(path);
 			var tex = Texture.fromAsset("assets/particles/coldy-breath.png");
-			pdps = new PDParticleSystem(config, tex, basePath);
+			pdps = PDParticleSystem.loadLiveSystem(path, tex);
 			container.addChild(pdps);
-			
-			pdps.emitterX = 60;
-			pdps.emitterY = 60;
-			//pdps.startColor = new Color(1,0,0,1);
-			pdps.populate(1);
-			Loom2D.juggler.add(pdps);
 		}
 		
 		override public function tick(t:Number, dt:Number) {
 			super.tick(t, dt);
+			pdps.advanceTime(dt);
+			//Player breath
+			var breathDelay = 2;
+			if (breathTime > breathDelay) {
+				pdps.emitterX = this.getPosition().x;
+				pdps.emitterY = this.getPosition().y;
+				pdps.populate(5, 0);
+				breathTime -= breathDelay;
+				trace("PUFF PUFF GIVE!");
+			}
+			breathTime += dt;
 			
 			if (moving0 && v.length > 70)
 			{
+				handleDirection();
 				direction = v;
 			}
-			display.advanceTime(dt * v.length * 0.02);
+			
+			for (var i = 0; i < anims.length; i++) {
+				anims[i].advanceTime(dt * v.length * 0.02);
+				if (!moving) {
+					anims[i].currentFrame = 0;
+				}
+			}
+			
+			/*display.advanceTime(dt * v.length * 0.02);
 			if (!moving) {
 				display.currentFrame = 0;
+			}*/
+		}
+		
+		private function setActiveAnim(anim:AnimActor = null) {
+			if (anim == null) return;
+			
+			activeAnim = anim;
+		}
+		
+		private function handleDirection() {
+			var angle = Math.round(((Math.atan2(direction.x, -direction.y)) % Math.TWOPI / Math.TWOPI) * 8);
+			angle = angle == 8 ? 0 : angle;
+			
+			
+			for (var i = 0; i < anims.length; i++) {
+				anims[i].visible = false;
 			}
-			pdps.populate(1);
-			pdps.emitterX = this.getPosition().x;
-			pdps.emitterY = this.getPosition().y;
+			anims[animDirections[angle]].visible = true;
+			
+			trace(angle);
 		}
 		
 		override public function render(t:Number) {
-			display.x = p.x;
-			display.y = p.y;
+			for (var i = 0; i < anims.length; i++) {
+				anims[i].x = p.x;
+				anims[i].y = p.y;
+			}
+			
+			/*display.x = p.x;
+			display.y = p.y;*/
 			
 			super.render(t);
 		}
