@@ -34,7 +34,7 @@ package  {
 		
 		private var chargeSound:Sound;
 		private var chargeTimer = -1;
-		private var chargeTime = 0.3;
+		private var chargeTime = 1;
 		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
@@ -88,7 +88,6 @@ package  {
 			if (breathTime > breathDelay) {
 				pdps.emitterX = p.x + (emmiterLocations[currDir].x - 16);
 				pdps.emitterY = p.y + (emmiterLocations[currDir].y - 16);
-				trace(currDir + " | " + (emmiterLocations[currDir].x - 16) + " : " + (emmiterLocations[currDir].y - 16));
 				pdps.populate(5, 0);
 				breathTime -= breathDelay;
 			}
@@ -116,6 +115,18 @@ package  {
 				}
 			}
 			
+			if (chargeTimer >= 0)
+			{
+				progressFg.clipRect = new Rectangle(0, 0, (chargeTimer / chargeTime) * progressFgTexture.width, progressFgTexture.height);
+				(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
+				progressBg.visible = true;
+				progressFg.visible = true;
+			}
+			else
+			{
+				(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
+			}
+			
 			/*display.advanceTime(dt * v.length * 0.02);
 			if (!moving) {
 				display.currentFrame = 0;
@@ -124,11 +135,14 @@ package  {
 		
 		public function charge() {
 			chargeTimer = 0;
+			speed = 1500;
 			chargeSound.play();
+			endMakingSnowball();
 		}
 		
 		public function resetCharge() {
 			chargeTimer = -1;
+			speed = 3000;
 			chargeSound.stop();
 		}
 		
