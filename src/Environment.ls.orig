@@ -145,13 +145,17 @@ package  {
 				addAI(ai);
 			}
 			
+<<<<<<< Updated upstream
 			for (i = 0; i < entities.length; i++) {
 				var entity:Entity = entities[i];
 				entity.tick(t, dt);
 			}
-
+=======
+			player.tick(t, dt);
+			pine.tick(t, dt);
 			snowOverlay.tick(dt);
 			snowballUi.tick(t, dt);
+>>>>>>> Stashed changes
 			
 			snowOverlay.tick(dt);
 			
