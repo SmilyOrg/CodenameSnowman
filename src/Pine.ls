@@ -60,7 +60,7 @@ package
 			else
 			{
 				overlayTime += dt;
-				overlay.alpha = overlayTime / MAX_OVERLAY_TIME;
+				overlay.alpha = Math.max(0.2, overlayTime / MAX_OVERLAY_TIME);
 			}
 			
 			image.x = p.x - 32;

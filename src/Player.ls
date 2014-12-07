@@ -69,6 +69,9 @@ package  {
 				}
 			}
 			
+			basic.tick(t, dt, p, v);
+			super.tick(t, dt);
+			
 			if (chargeTimer >= 0)
 			{
 				progressFg.clipRect = new Rectangle(0, 0, (chargeTimer / chargeTime) * progressFgTexture.width, progressFgTexture.height);
@@ -85,9 +88,6 @@ package  {
 			{
 				(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
 			}
-			
-			basic.tick(t, dt, p, v);
-			super.tick(t, dt);
 		}
 		
 		public function charge() {
