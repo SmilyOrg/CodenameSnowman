@@ -23,6 +23,8 @@ package  {
 		private var display:Sprite = new Sprite();
 		private var ui:Sprite = new Sprite();
 		
+		private var scoreUI:ScoreUI;
+		
 		private var arena:Entity;
 		
 		private var ais = new Vector.<AI>();
@@ -91,6 +93,8 @@ package  {
 			snowOverlay.initialize(w, h);
 			
 			snowballUi = new SnowballUI();
+			
+			scoreUI = new ScoreUI(ui, h);
 			
 			spawnRadiusMin = 200;
 			spawnRadiusMax = 300;
@@ -189,6 +193,7 @@ package  {
 					player.startMakingSnowball();
 					break;
 				case 44: // Space
+					scoreUI.addScore(5);
 					player.charge();
 					break;
 			}
@@ -390,6 +395,11 @@ package  {
 		public function getSnowballUi(): SnowballUI
 		{
 			return snowballUi;
+		}
+		
+		public function getScoreUi():ScoreUI
+		{
+			return scoreUI;
 		}
 	}
 	

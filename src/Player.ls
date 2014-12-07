@@ -22,11 +22,11 @@ package  {
 		private var emmiterLocations:Vector.<Point> = [
 														new Point(16, 3), //up
 														new Point(22, 7), //up-right
-														new Point(16, 18), //right
+														new Point(24, 18), //right
 														new Point(20, 18), //down-right
-														new Point(8, 18), //down
+														new Point(16, 18), //down
 														new Point(12, 18), //down-left
-														new Point(24, 18), //left
+														new Point(8, 18), //left
 														new Point(10, 8) //up-left
 													];
 		private var activeAnim:AnimActor;

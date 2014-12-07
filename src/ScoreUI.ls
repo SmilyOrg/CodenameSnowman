@@ -15,7 +15,7 @@ package
 		
 		public function ScoreUI(container:DisplayObjectContainer, stageH:Number = 0) 
 		{
-			scoreLabel = new SimpleLabel("assets/square-font-export.fnt");
+			scoreLabel = new SimpleLabel("assets/square-font-bordered-export.fnt");
 			scoreLabel.text = "score: " + score;
 			scoreLabel.x = 20;
 			scoreLabel.y = stageH - 20 - scoreLabel.height;
