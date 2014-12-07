@@ -29,6 +29,7 @@ package  {
 		private var walls:Walls;
 		private var flag:Flag;
 		private var snowballs = new Vector.<Snowball>();
+		private var snowballItems = new Vector.<SnowballItem>();
 		
 		private var entities = new Vector.<Entity>();
 		
@@ -56,6 +57,16 @@ package  {
 			addEntity(walls = new Walls());
 			addEntity(flag = new Flag());
 			
+			addSnowball(310, 180);
+			addSnowball(330, 180);
+			addSnowball(320, 190);
+			addSnowball(320, 170);
+			addSnowball(310, 170);
+			addSnowball(310, 190);
+			addSnowball(330, 170);
+			addSnowball(330, 190);
+			
+			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
 			
@@ -79,6 +90,14 @@ package  {
 			stage.addChild(ui);
 			
 			reset();
+		}
+		
+		private function addSnowball(x:int, y:int)
+		{
+			var snowball = new SnowballItem();
+			snowball.setPosition(x, y);
+			snowballItems.push(snowball);
+			addEntity(snowball);
 		}
 		
 		private function addAI(ai:AI) {
@@ -139,12 +158,21 @@ package  {
 				case 8: // E
 					player.endMakingSnowball();
 					break;
-				case 44:
+				case 44: // space
 					if (snowballUi.throwSnowball())
 					{
 						var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
 						snowballs.push(snowball);
 						addEntity(snowball);
+					}
+					break;
+				case 10: // G
+					if (snowballUi.throwSnowball())
+					{
+						var sb = new SnowballItem();
+						sb.setPosition(player.getPosition().x, player.getPosition().y + 12);
+						snowballItems.push(sb);
+						addEntity(sb);
 					}
 					break;
 			}
@@ -194,6 +222,36 @@ package  {
 					if (snowball.checkCollision(ai)) {
 						ai.destroy();
 						snowball.destroy();
+					}
+				}
+			}
+			
+			for (i = 0; i < snowballItems.length; i++)
+			{
+				var sb = snowballItems[i];
+				
+				var pp = player.getPosition();
+				pp.y += 10;
+				
+				var d = Point.distance(pp, sb.getPosition());
+				
+				if (sb.canPickUp())
+				{
+					if (d < 7)
+					{
+						if (snowballUi.pickUpSnowball())
+						{
+							sb.destroy();
+							snowballItems.splice(i, 1);
+						}
+						break;
+					}
+				}
+				else
+				{
+					if (d >= 7)
+					{
+						sb.enablePickUp();
 					}
 				}
 			}

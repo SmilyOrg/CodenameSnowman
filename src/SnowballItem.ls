@@ -1,45 +1,50 @@
 package  
 {
 	import loom2d.display.Image;
-	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	/**
 	 * ...
 	 * @author Jure Gregorin
 	 */
-	public class Flag extends Entity
+	public class SnowballItem extends Entity
 	{
 		private static var texture:Texture = null;
 		private var image:Image = null;
+		private var isFresh = true;
 		
-		public function Flag() 
+		public function SnowballItem() 
 		{
 			v.x = 0;
 			v.y = 0;
 			a.x = 0;
 			a.y = 0;
 			
-			p.x = 320;
-			p.y = 180;
-			
-			bounds = new Rectangle(p.x - 4, p.y - 4, 8, 8);
-			
 			if (texture == null)
 			{
-				texture = Texture.fromAsset("assets/flag.png");
+				texture = Texture.fromAsset("assets/snowball.png");
 			}
 			
 			image = new Image(texture);
 			
-			image.x = p.x - 5;
-			image.y = p.y - 124;
-			
-			environment.getDisplay().addChild(image);
+			environment.getGround().addChild(image);
+		}
+		
+		public function enablePickUp()
+		{
+			isFresh = false;
+		}
+		
+		public function canPickUp():Boolean
+		{
+			return !isFresh;
 		}
 		
 		override public function tick(t:Number, dt:Number)
 		{
+			image.x = p.x - 4;
+			image.y = p.y - 4;
+			
 			super.tick(t, dt);
 		}
 		
@@ -49,5 +54,7 @@ package
 			image.removeFromParent();
 			return true;
 		}
+		
 	}
+	
 }
