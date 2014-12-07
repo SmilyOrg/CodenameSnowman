@@ -14,7 +14,7 @@ package
 		
 		private var timeAlive:Number = 0;
 		
-		private static const MAX_TIME_ALIVE = 2;
+		private static const MAX_TIME_ALIVE = 10;
 		
 		public function Footprint() 
 		{
@@ -39,6 +39,8 @@ package
 			image.y = p.y;
 			
 			timeAlive += dt;
+			
+			image.alpha = 1 - (timeAlive / MAX_TIME_ALIVE);
 			
 			if (timeAlive > MAX_TIME_ALIVE)
 			{

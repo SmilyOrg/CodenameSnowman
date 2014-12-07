@@ -108,8 +108,6 @@ package  {
 				anims[i].visible = false;
 			}
 			anims[animDirections[angle]].visible = true;
-			
-			trace(angle);
 		}
 		
 		override public function render(t:Number) {

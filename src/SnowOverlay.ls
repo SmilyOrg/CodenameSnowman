@@ -52,8 +52,8 @@ package
 			child.x = Math.randomRange(0, _w);
 			child.y = isYRandom ? Math.randomRange(0, _h) : 0;
 			
-			child.width = 1;
-			child.height = 1;
+			child.width = 2;
+			child.height = 2;
 		}
 		
 		public function tick(dt:Number):void
