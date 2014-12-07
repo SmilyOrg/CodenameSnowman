@@ -82,6 +82,11 @@ package
 		{
 			return snowballCount >= MAX_SNOWBALLS;
 		}
+		
+		public function numOfSnowballs():Number
+		{
+			return snowballCount;
+		}
 	}
 	
 }
