@@ -16,7 +16,17 @@ package  {
 		private var direction:Point = new Point(1, 0);
 		private var breathTime:Number = 0;
 		private var anims:Vector.<AnimActor>;
-		private var animDirections:Vector.<int> = [0, 0, 2, 2, 1, 1, 3, 3];
+		private var animDirections:Vector.<int> = [0, 0, 2, 2, 1, 4, 3, 3];
+		private var emmiterLocations:Vector.<Point> = [
+														new Point(16, 3), //up
+														new Point(16, 3), //up-right
+														new Point(16, 18), //right
+														new Point(16, 18), //down-right
+														new Point(8, 18), //down
+														new Point(8, 18), //down-left
+														new Point(24, 18), //left
+														new Point(24, 18) //up-left
+													];
 		private var activeAnim:AnimActor;
 		private var direction0:int = 2;
 		
@@ -28,6 +38,7 @@ package  {
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
 			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
+			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 3));
 			
 			for (var i = 0; i < anims.length; i++) {
 				anims[i].play();
