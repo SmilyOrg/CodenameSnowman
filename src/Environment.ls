@@ -20,6 +20,7 @@ package  {
 		private var cursor:Sprite;
 		
 		private var shadowLayer:Sprite = new Sprite();
+		private var fogLayer:Sprite = new Sprite();
 		private var ground:Sprite = new Sprite();
 		private var display:Sprite = new Sprite();
 		private var ui:Sprite = new Sprite();
@@ -102,12 +103,14 @@ package  {
 			
 			display.scale = 2;
 			shadowLayer.scale = 2;
+			fogLayer.scale = 2;
 			ground.scale = 2;
 			ui.scale = 2;
 			
 			stage.addChild(ground);
 			stage.addChild(shadowLayer);
 			stage.addChild(display);
+			stage.addChild(fogLayer);
 			stage.addChild(ui);
 			stage.addChild(cursor);
 			
@@ -371,7 +374,6 @@ package  {
 			for (var i = 0; i < entities.length; i++) {
 				var ent = entities[i];
 				if (e != ent && e.checkCollision(ent)) {
-					if(e.getTypeName() == "Player")
 					return true;
 				}
 			}
@@ -396,6 +398,11 @@ package  {
 		public function getShadowLayer():DisplayObjectContainer
 		{
 			return shadowLayer;
+		}
+		
+		public function getFogLayer():DisplayObjectContainer
+		{
+			return fogLayer;
 		}
 		
 		public function getSnowballUi(): SnowballUI

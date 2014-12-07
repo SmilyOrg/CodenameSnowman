@@ -52,6 +52,10 @@ package
 			return p;
 		}
 		
+		public function getVelocity():Point {
+			return v;
+		}
+		
 		/** Set sound position and velocity to entity position and velocity */
 		protected function placeSound(sound:Sound)
 		{

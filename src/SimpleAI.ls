@@ -40,7 +40,7 @@ package  {
 			moveUp = s.y < -threshold;
 			moveDown = s.y > threshold;
 			
-			basic.tick(t, dt, p, v);
+			basic.tick(t, dt, this);
 			
 			super.tick(t, dt);
 		}
