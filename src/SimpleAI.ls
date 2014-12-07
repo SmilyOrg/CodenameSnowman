@@ -6,51 +6,18 @@ package  {
 	
 	public class SimpleAI extends AI {
 		
-		private var display:AnimActor;
-		private var direction:Point = new Point(1, 0);
-		private var anims:Vector.<AnimActor>;
-		private var animsShadow:Vector.<AnimActor>;
-		private var animDirections:Vector.<int> = [0, 7, 6, 5, 4, 3, 2, 1];
-		private var activeAnim:AnimActor;
+		private var basic:BasicActor;
 		
 		public function SimpleAI(container:DisplayObjectContainer) {
-			anims = new Vector.<AnimActor>();
-			anims.push(new AnimActor("assets/eskimo-walk.png"));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 7));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 2));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 3));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 4));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 5));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 6));
-			anims.push(new AnimActor("assets/eskimo-walk.png", 32, 32, 1));
-			
-			animsShadow = new Vector.<AnimActor>();
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 0));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 7));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 2));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 3));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 4));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 5));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 6));
-			animsShadow.push(new AnimActor("assets/eskimo-walk-shadows.png", 36, 32, 1));
-			
-			for (var i = 0; i < anims.length; i++) {
-				anims[i].play();
-				anims[i].center();
-				anims[i].color = 0xFF0000;
-				animsShadow[i].play();
-				animsShadow[i].center();
-				container.addChild(anims[i]);
-				environment.getShadowLayer().addChild(animsShadow[i]);
-			}
-			
-			handleDirection();
+			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
 			
 			speed *= 0.7;
 			bounds.x = -8;
 			bounds.y = -8;
 			bounds.width = 12;
 			bounds.height = 12;
+			
+			basic.handleDirection(v);
 		}
 		
 		override public function tick(t:Number, dt:Number) {
@@ -75,55 +42,19 @@ package  {
 			moveUp = s.y < -threshold;
 			moveDown = s.y > threshold;
 			
-			if (moving0 && v.length > 70)
-			{
-				handleDirection();
-				direction = v;
-			}
-			
-			for (var i = 0; i < anims.length; i++) {
-				anims[i].advanceTime(dt * v.length * 0.02);
-				animsShadow[i].advanceTime(dt * v.length * 0.02);
-				if (!moving || anims[i].currentFrame == 3) {
-					anims[i].currentFrame = 0;
-					animsShadow[i].currentFrame = 0;
-				}
-			}
+			basic.tick(t, dt, p, v);
 			
 			super.tick(t, dt);
 		}
 		
-		private function handleDirection() {
-			var angle = Math.round(((Math.atan2(direction.x, -direction.y)) % Math.TWOPI / Math.TWOPI) * 8);
-			angle = angle == 8 ? 0 : angle;
-			
-			
-			for (var i = 0; i < anims.length; i++) {
-				anims[i].visible = false;
-				animsShadow[i].visible = false;
-			}
-			anims[animDirections[angle]].visible = true;
-			animsShadow[animDirections[angle]].visible = true;
-		}
-		
 		override public function render(t:Number) {
-			for (var i = 0; i < anims.length; i++) {
-				anims[i].x = p.x;
-				anims[i].y = p.y;
-				
-				animsShadow[i].x = p.x + 10;
-				animsShadow[i].y = p.y;
-			}
-			
+			basic.render(p);
 			super.render(t);
 		}
 		
 		override public function destroy():Boolean {
 			if (!super.destroy()) return false;
-			for (var i = 0; i < anims.length; i++) {
-				anims[i].removeFromParent(true);
-				animsShadow[i].removeFromParent(true);
-			}
+			basic.destroy();
 			return true;
 		}
 		

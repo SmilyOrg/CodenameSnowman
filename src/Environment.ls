@@ -187,7 +187,11 @@ package  {
 			spawnTimer += dt;
 			if (spawnTimer > spawnTime && ais.length < spawnMax) {
 				spawnTimer = 0;
-				ai = new ThinkyAI(display);
+				if (Math.random() < 0.6) {
+					ai = new ThinkyAI(display);
+				} else {
+					ai = new SimpleAI(display);
+				}
 				var angle = Math.randomRange(0, Math.TWOPI);
 				var radius = Math.randomRange(spawnRadiusMin, spawnRadiusMax);
 				ai.setPosition(w/2+Math.cos(angle)*radius, h/2+Math.sin(angle)*radius);
