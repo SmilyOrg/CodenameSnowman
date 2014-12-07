@@ -70,7 +70,7 @@ package  {
 				pdps.emitterY = this.getPosition().y;
 				pdps.populate(5, 0);
 				breathTime -= breathDelay;
-				trace("PUFF PUFF GIVE!");
+				trace("PUFF PUFF PASS!");
 			}
 			breathTime += dt;
 			
