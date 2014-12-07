@@ -31,21 +31,18 @@ package
 		}
 		
 		override public function render(t:Number):void
-		{			
-			super.render(t);
-		}
-		
-		override public function tick(t:Number, dt:Number):void 
 		{
 			image.x = p.x + bounds.left;
 			image.y = p.y + bounds.top;
 			
-			super.tick(t, dt);
+			super.render(t);
 		}
 		
-		public function destroy()
+		public function destroy():Boolean
 		{
-			image.removeFromParent(true);
+			if (!super.destroy()) return false;
+			image.removeFromParent();
+			return true;
 		}
 	}
 }

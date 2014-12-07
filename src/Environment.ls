@@ -16,27 +16,32 @@ package  {
 		
 		private var display:Sprite = new Sprite();
 		
+		private var arena:Entity;
+		
 		private var ais = new Vector.<AI>();
 		private var player:Player;
 		private var pine:Pine;
-		private var snowball:Snowball;
-		private var arena:Entity;
+		private var snowballs = new Vector.<Snowball>();
+		
+		private var entities = new Vector.<Entity>();
+		
 		private var snowOverlay:SnowOverlay;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
 			this.h = h;
 			
-			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
+			background = new Image(Texture.fromAsset("assets/bg_ui.png"));
 			display.addChild(background);
 			
-			for (var i:int = 0; i < 10; i++) {
-				ais.push(new SimpleAI(display));
+			for (var i:int = 0; i < 3; i++) {
+				var ai = new SimpleAI(display);
+				ais.push(ai);
+				addEntity(ai);
 			}
 			
-			player = new Player(display);
-			pine = new Pine(display);
-			snowball = null;
+			addEntity(player = new Player(display));
+			addEntity(pine = new Pine(display));
 			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
@@ -50,6 +55,10 @@ package  {
 			stage.addChild(display);
 			
 			reset();
+		}
+		
+		private function addEntity(entity:Entity) {
+			entities.push(entity);
 		}
 		
 		public function reset() {
@@ -92,8 +101,9 @@ package  {
 					player.moveRight = false;
 					break;
 				case 44:
-					if(snowball == null)
-						snowball = new Snowball(display, player.getPosition(), player.getDirection());
+					var snowball = new Snowball(display, player.getPosition(), player.getDirection());
+					snowballs.push(snowball);
+					addEntity(snowball);
 					break;
 			}
 		}
@@ -103,43 +113,29 @@ package  {
 			pine.tick(t, dt);
 			snowOverlay.tick(dt);
 			
-			while (snowball != null)
-			{
+			var i:int;
+			var j:int;
+			var ai:AI;
+			
+			for (i = 0; i < snowballs.length; i++) {
+				var snowball = snowballs[i];
 				snowball.tick(t, dt);
 				if (snowball.checkCollision(pine))
 				{
 					pine.hit();
 					snowball.destroy();
-					snowball = null;
-					break;
 				}
 				
 				if (!snowball.checkCollision(arena))
 				{
 					snowball.destroy();
-					snowball = null;
-					break;
 				}
-				
-				break;
-			}
-			
-			var ai:AI;
-			var i:int;
-			
-			if (snowball != null)
-			{
-				for (i = 0; i < ais.length; i++) {
-					ai = ais[i];
-					if (ai != null && snowball.checkCollision(ai))
-					{
+				//
+				for (j = 0; j < ais.length; j++) {
+					ai = ais[j];
+					if (snowball.checkCollision(ai)) {
 						ai.destroy();
-						ais[i] = null;
-						
 						snowball.destroy();
-						snowball = null;
-						
-						break;
 					}
 				}
 			}
@@ -147,23 +143,33 @@ package  {
 			var playerPos:Point = player.getPosition();
 			for (i = 0; i < ais.length; i++) {
 				ai = ais[i];
-				if (ai != null)
-				{
-					ai.target = playerPos;
-					ai.tick(t, dt);
-				}
+				ai.target = playerPos;
+				ai.tick(t, dt);
 			}
+			
+			flush();
 			
 			t += dt;
 		}
 		
 		public override function render(t:Number) {
-			player.render(t);
-			for (var i:int = 0; i < ais.length; i++) {
-				var ai = ais[i];
-				if (ai != null)
-				{
-					ai.render(t);
+			for (var i = 0; i < entities.length; i++) {
+				var entity = entities[i];
+				entity.render(t);
+			}
+		}
+		
+		private function flush() {
+			removeCorpses(entities);
+			removeCorpses(ais);
+			removeCorpses(snowballs);
+		}
+		
+		private function removeCorpses(vector:Vector.<Entity>) {
+			for (var i = vector.length-1; i >= 0; i--) {
+				var entity = vector[i];
+				if (entity.state == Entity.STATE_DESTROYED) {
+					vector.splice(i, 1);
 				}
 			}
 		}

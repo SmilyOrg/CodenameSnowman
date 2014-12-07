@@ -14,7 +14,7 @@ package
 	{
 		private static var _texture:Vector.<Texture> = new <Texture>(3);
 		
-		private var state:Number = 1;
+		private var frame:Number = 1;
 		private var counter:Number = 0;
 		private var image:Image;
 		
@@ -27,7 +27,7 @@ package
 				_texture[2] = Texture.fromAsset("assets/Tree3.png");
 			}
 			
-			image = new Image(_texture[state]);
+			image = new Image(_texture[frame]);
 			container.addChild(image);
 			
 			v = new Point(0, 0);
@@ -39,18 +39,18 @@ package
 		
 		public override function tick(t:Number, dt:Number):void
 		{			
-			if (state < 2)
+			if (frame < 2)
 			{
 				counter += dt;
 				
 				if (counter > 1)
 				{
-					state++;
+					frame++;
 					counter -= 1;
 				}
 			}
 			
-			image.texture = _texture[state];
+			image.texture = _texture[frame];
 			image.x = p.x;
 			image.y = p.y;
 		}
@@ -59,9 +59,9 @@ package
 		
 		public function hit():void 
 		{
-			state = 0;
+			frame = 0;
 			counter = 0;
-			image.texture = _texture[state];
+			image.texture = _texture[frame];
 		}
 		
 	}

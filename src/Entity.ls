@@ -12,6 +12,10 @@ package
 	 */
 	public class Entity
 	{
+		public static var STATE_IDLE      = 0;
+		public static var STATE_DESTROYED = 1;
+		public var state = STATE_IDLE;
+		
 		/** Position */
 		protected var p:Point;
 		
@@ -91,7 +95,13 @@ package
 			a.y = 0;
 		}
 		
-		public function render(t:Number) {}
+		public function render(t:Number) { }
+		
+		public function destroy():Boolean {
+			if (state == STATE_DESTROYED) return false;
+			state = STATE_DESTROYED;
+			return true;
+		}
 		
 	}
 }

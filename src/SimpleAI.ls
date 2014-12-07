@@ -23,6 +23,8 @@ package  {
 		}
 		
 		override public function tick(t:Number, dt:Number) {
+			if (state == STATE_DESTROYED) return;
+			
 			var s:Point;
 			var d:Point;
 			
@@ -52,9 +54,10 @@ package  {
 			super.render(t);
 		}
 		
-		override public function destroy() {
+		override public function destroy():Boolean {
+			if (!super.destroy()) return false;
 			display.removeFromParent(true);
-			super.destroy();
+			return true;
 		}
 		
 	}
