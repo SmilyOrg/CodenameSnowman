@@ -25,7 +25,14 @@ package  {
 		
 		private var entities = new Vector.<Entity>();
 		
+		private var spawnTimer = 0;
+		private var spawnTime = 0.5;
+		private var spawnMax = 5;
+		
 		private var snowOverlay:SnowOverlay;
+		private var spawnRadiusMin:Number;
+		private var spawnRadiusMax:Number;
+		private var spawnRadiusStretch:Number;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
@@ -33,12 +40,6 @@ package  {
 			
 			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
 			display.addChild(background);
-			
-			for (var i:int = 0; i < 3; i++) {
-				var ai = new SimpleAI(display);
-				ais.push(ai);
-				addEntity(ai);
-			}
 			
 			addEntity(player = new Player(display));
 			addEntity(pine = new Pine(display));
@@ -50,11 +51,19 @@ package  {
 			display.addChild(snowOverlay);
 			snowOverlay.initialize(w, h);
 			
+			spawnRadiusMin = 200;
+			spawnRadiusMax = 300;
+			
 			display.scale = 2;
 			
 			stage.addChild(display);
 			
 			reset();
+		}
+		
+		private function addAI(ai:AI) {
+			ais.push(ai);
+			entities.push(ai);
 		}
 		
 		private function addEntity(entity:Entity) {
@@ -109,13 +118,24 @@ package  {
 		}
 		
 		public override function tick(t:Number, dt:Number) {
+			var ai:AI;
+			
+			spawnTimer += dt;
+			if (spawnTimer > spawnTime && ais.length < spawnMax) {
+				spawnTimer = 0;
+				ai = new SimpleAI(display);
+				var angle = Math.randomRange(0, Math.TWOPI);
+				var radius = Math.randomRange(spawnRadiusMin, spawnRadiusMax);
+				ai.setPosition(w/2+Math.cos(angle)*radius, h/2+Math.sin(angle)*radius);
+				addAI(ai);
+			}
+			
 			player.tick(t, dt);
 			pine.tick(t, dt);
 			snowOverlay.tick(dt);
 			
 			var i:int;
 			var j:int;
-			var ai:AI;
 			
 			for (i = 0; i < snowballs.length; i++) {
 				var snowball = snowballs[i];
