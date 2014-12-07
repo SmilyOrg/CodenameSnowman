@@ -134,15 +134,10 @@ package  {
 				case 44:
 					if (snowballUi.throwSnowball())
 					{
-						var snowball = new Snowball(display, player.getPosition(), player.getDirection());
+						var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
 						snowballs.push(snowball);
 						addEntity(snowball);
 					}
-				case 44: // Space
-					var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
-					snowballs.push(snowball);
-					addEntity(snowball);
-					player.resetCharge();
 					break;
 			}
 		}
