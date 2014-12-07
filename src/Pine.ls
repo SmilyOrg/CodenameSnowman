@@ -15,21 +15,32 @@ package
 		private static var texture:Texture = null;
 		private static var textureOverlay:Texture = null;
 		
+		private static var shadowTexture:Texture = null;
+		private static var shadowTextureOverlay:Texture = null;
+		
 		private static const MAX_OVERLAY_TIME = 10;
 		private var overlayTime:Number = 0;
 		private var image:Image;
 		private var overlay:Image;
+		private var shadow:Image;
 		
 		public function Pine(container: DisplayObjectContainer):void
 		{
-			texture = Texture.fromAsset("assets/Tree.png");
-			textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
+			if (texture == null)
+				texture = Texture.fromAsset("assets/Tree.png");
+			if(shadowTexture == null)
+				shadowTexture = Texture.fromAsset("assets/Tree-shadow.png");
+			if(textureOverlay == null)
+				textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
 			
 			image = new Image(texture);
 			container.addChild(image);
 			
 			overlay = new Image(textureOverlay);
 			container.addChild(overlay);
+			
+			shadow = new Image(shadowTexture);
+			environment.getGround().addChild(shadow);
 			
 			overlayTime = MAX_OVERLAY_TIME;
 			
@@ -57,6 +68,9 @@ package
 			
 			overlay.x = p.x;
 			overlay.y = p.y;
+			
+			shadow.x = p.x + 12;
+			shadow.y = p.y;
 		}
 		
 		/* INTERFACE IHittable */

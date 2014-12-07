@@ -46,14 +46,38 @@ package
 			}
 		}
 		
+		public function throwSnowball():Boolean
+		{
+			if (snowballCount > 0)
+			{
+				snowballCount--;
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public function pickUpSnowball():void
+		{
+			if (snowballCount < MAX_SNOWBALLS)
+			{
+				snowballCount++;
+			}
+		}
+		
 		override public function tick(t:Number, dt:Number)
 		{
 			super.tick(t, dt);
 			
 			for (var i = 0; i < MAX_SNOWBALLS; i++)
 			{
-				snowballs[i].visible = (snowballCount <= MAX_SNOWBALLS - i);
+				snowballs[i].visible = i < snowballCount;
 			}
+		}
+		
+		public function hasMax():Boolean
+		{
+			return snowballCount >= MAX_SNOWBALLS;
 		}
 	}
 	

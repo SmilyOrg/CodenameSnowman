@@ -14,7 +14,7 @@ package
 	{
 		private var image:Image;
 		
-		public function Snowball(container:DisplayObjectContainer, origin:Point, direction:Point) 
+		public function Snowball(container:DisplayObjectContainer, origin:Point, direction:Point, charge:Number, maxCharge:Number) 
 		{
 			image = new Image(Texture.fromAsset("assets/snowball.png"));
 			
@@ -22,8 +22,14 @@ package
 			
 			direction.normalize();
 			
-			v.x = direction.x * 240;
-			v.y = direction.y * 240;
+			var speed = 240;
+			
+			trace(charge, maxCharge);
+			
+			if (charge == maxCharge) image.color = 0xDFDF00;
+			
+			v.x = direction.x * speed;
+			v.y = direction.y * speed;
 			p.x = origin.x;
 			p.y = origin.y;
 			
@@ -38,10 +44,10 @@ package
 			super.render(t);
 		}
 		
-		public override function destroy():Boolean
+		public function destroy():Boolean
 		{
 			if (!super.destroy()) return false;
-			image.removeFromParent();
+			image.removeFromParent(true);
 			return true;
 		}
 	}

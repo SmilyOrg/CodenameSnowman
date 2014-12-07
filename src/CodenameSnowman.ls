@@ -25,7 +25,7 @@ package
 		private var environment:Environment;
 		
 		override public function run():void
-		{
+		{			
 			// Comment out this line to turn off automatic scaling.
 			stage.scaleMode = StageScaleMode.LETTERBOX;
 			
