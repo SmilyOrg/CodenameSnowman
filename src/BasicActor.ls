@@ -17,6 +17,7 @@ package  {
 		private var activeAnim:AnimActor;
 		
 		private var footstep:Sound;
+		private var lastFootprint:Point = new Point(-100, -100);
 		
 		public function BasicActor(container:DisplayObjectContainer, shadowContainer:DisplayObjectContainer, color:int = 0xFFFFFF) {
 			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
@@ -87,12 +88,15 @@ package  {
 		
 		private function onFootstep(p:Point)
 		{
-			footstep.setPitch(Math.random() * 0.5 + 0.7);
-			footstep.play();
+			if (Point.distance(p.add(new Point(0,8)), lastFootprint) > 5) {
+				footstep.setPitch(Math.random() * 0.5 + 0.7);
+				footstep.play();
 			
-			var footprint = new Footprint();
-			footprint.setPosition(p.x, p.y + 8);
-			Entity.environment.addEntity(footprint);
+				var footprint = new Footprint();
+				footprint.setPosition(p.x, p.y + 8);
+				Entity.environment.addEntity(footprint);
+				lastFootprint = footprint.getPosition();
+			}
 		}
 		
 		public function handleDirection(v:Point) {
@@ -117,8 +121,8 @@ package  {
 				anims[i].x = p.x;
 				anims[i].y = p.y;
 				
-				animsShadow[i].x = p.x + 10;
-				animsShadow[i].y = p.y;
+				animsShadow[i].x = p.x + 9;
+				animsShadow[i].y = p.y + 1;
 			}
 		}
 		

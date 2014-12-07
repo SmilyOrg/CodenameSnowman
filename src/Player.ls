@@ -5,6 +5,7 @@ package  {
 	import loom2d.display.Image;
 	import loom2d.math.Color;
 	import loom2d.math.Point;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	import system.platform.Path;
 	import system.xml.XMLDocument;
@@ -18,24 +19,26 @@ package  {
 		private var emmiterLocations:Vector.<Point> = [
 														new Point(16, 3), //up
 														new Point(22, 7), //up-right
-														new Point(24, 18), //right
+														new Point(16, 18), //right
 														new Point(20, 18), //down-right
-														new Point(16, 18), //down
+														new Point(8, 18), //down
 														new Point(12, 18), //down-left
-														new Point(8, 18), //left
+														new Point(24, 18), //left
 														new Point(10, 8) //up-left
 													];
 		private var currDir:int = 2;
 		
 		private var chargeSound:Sound;
 		private var chargeTimer = -1;
-		private var chargeTime = 0.3;
+		private var chargeTime = 1;
 		
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
 			basic = new BasicActor(container, environment.getShadowLayer());
 			
 			basic.handleDirection(v);
+			
+			bounds = new Rectangle(-10, -16, 20, 32);
 			
 			chargeSound = Sound.load("assets/sound/zzzip.ogg");
 			
@@ -68,15 +71,38 @@ package  {
 			
 			basic.tick(t, dt, p, v);
 			super.tick(t, dt);
+			
+			if (chargeTimer >= 0)
+			{
+				progressFg.clipRect = new Rectangle(0, 0, (chargeTimer / chargeTime) * progressFgTexture.width, progressFgTexture.height);
+				
+				progressBg.visible = true;
+				progressFg.visible = true;
+				
+				if(chargeTimer >= maxCharge)
+					(progressFg.getChildAt(0) as Image).color = 0xDFDF00;
+				else
+					(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
+			}
+			else
+			{
+				(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
+			}
 		}
 		
 		public function charge() {
-			chargeTimer = 0;
-			chargeSound.play();
+			if (environment.getSnowballUi().numOfSnowballs() > 0)
+			{
+				chargeTimer = 0;
+				speed = 1500;
+				chargeSound.play();
+				endMakingSnowball();
+			}
 		}
 		
 		public function resetCharge() {
 			chargeTimer = -1;
+			speed = 3000;
 			chargeSound.stop();
 		}
 		

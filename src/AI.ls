@@ -5,8 +5,18 @@ package  {
 		
 		public var target:Point;
 		
+		public var onDeath:Function = null;
+		
 		public function AI() {
 			
+		}
+		
+		public override function destroy():Boolean
+		{
+			if(onDeath != null)
+				onDeath(this);
+			
+			return super.destroy();
 		}
 		
 	}

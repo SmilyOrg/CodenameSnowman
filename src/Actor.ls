@@ -21,6 +21,10 @@ package  {
 		protected var snowballProgress:Number = 0;
 		private static const SNOWBALL_MAKING_TIME = 3;
 		protected var speed = 3000;
+		protected var moving = false;
+		private var footstepTime = 0;
+		private var footstepTreshold = 0.2;
+		protected var moving0 = false;
 		
 		protected var progressBgTexture:Texture = null;
 		protected var progressFgTexture:Texture = null;
@@ -28,7 +32,12 @@ package  {
 		protected var progressBg:Image = null;
 		protected var progressFg:Sprite = null;
 		
+		private var footstep:Sound;
+		
 		public function Actor() {
+			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
+			footstep.setGain(0.1);
+			
 			if (progressBgTexture == null)
 				progressBgTexture = Texture.fromAsset("assets/progress-bar-bg.png");
 			
@@ -41,7 +50,19 @@ package  {
 			
 			Entity.environment.getUi().addChild(progressBg);
 			Entity.environment.getUi().addChild(progressFg);
+			
+			hasFreeWill = true;
 		}
+		
+		/*private function onFootstep()
+		{
+			footstep.setPitch(Math.random() * 0.5 + 0.7);
+			footstep.play();
+			
+			var footprint = new Footprint();
+			footprint.setPosition(p.x, p.y + 8);
+			Entity.environment.addEntity(footprint);
+		}*/
 		
 		override public function tick(t:Number, dt:Number) {
 			
@@ -51,6 +72,20 @@ package  {
 				if (moveRight) a.x += 1;
 				if (moveUp) a.y -= 1;
 				if (moveDown) a.y += 1;
+				moving = v.length > 10;
+				if (moving || moving0) {
+					if (footstepTime > footstepTreshold || moving0 != moving) {
+						//onFootstep();
+						if (moving0 != moving) {
+							footstepTime = 0;
+						} else {
+							footstepTime -= footstepTreshold;
+						}
+					}
+					
+					footstepTime += dt;
+				}
+				moving0 = moving;
 				
 				a.normalize(speed);
 			}

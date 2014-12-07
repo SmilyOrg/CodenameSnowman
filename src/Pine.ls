@@ -2,7 +2,6 @@ package
 {
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
-	import loom2d.display.Sprite;
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
@@ -21,7 +20,6 @@ package
 		
 		private static const MAX_OVERLAY_TIME = 30;
 		private var overlayTime:Number = 0;
-		private var display:Sprite = new Sprite();
 		private var image:Image;
 		private var overlay:Image;
 		private var shadow:Image;
@@ -36,14 +34,10 @@ package
 				textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
 			
 			image = new Image(texture);
-			display.addChild(image);
+			container.addChild(image);
 			
 			overlay = new Image(textureOverlay);
-			display.addChild(overlay);
-			
-			overlay.y = image.y = -image.height+4;
-			
-			container.addChild(display);
+			container.addChild(overlay);
 			
 			shadow = new Image(shadowTexture);
 			environment.getShadowLayer().addChild(shadow);
@@ -54,7 +48,7 @@ package
 			a = new Point(0, 0);
 			p = new Point(100, 100);
 			
-			bounds = new Rectangle(20, image.y, 8, 48);
+			bounds = new Rectangle(-8, -40, 16, 30);
 		}
 		
 		public override function tick(t:Number, dt:Number):void
@@ -66,14 +60,17 @@ package
 			else
 			{
 				overlayTime += dt;
-				overlay.alpha = overlayTime / MAX_OVERLAY_TIME;
+				overlay.alpha = Math.max(0.2, overlayTime / MAX_OVERLAY_TIME);
 			}
 			
-			display.x = p.x;
-			display.y = p.y;
+			image.x = p.x - 32;
+			image.y = p.y - 56;
 			
-			shadow.x = display.x + 12;
-			shadow.y = display.y + image.y;
+			overlay.x = image.x;
+			overlay.y = image.y;
+			
+			shadow.x = image.x + 12;
+			shadow.y = image.y;
 		}
 		
 		/* INTERFACE IHittable */

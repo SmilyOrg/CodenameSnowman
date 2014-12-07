@@ -2,9 +2,13 @@ package
 {
 	import loom.Application;
 	import loom.sound.Sound;
+	import loom2d.core.TouchProcessor;
 	import loom2d.display.StageScaleMode;
 	import loom2d.display.Image;
 	import loom2d.events.KeyboardEvent;
+	import loom2d.events.Touch;
+	import loom2d.events.TouchEvent;
+	import loom2d.events.TouchPhase;
 	import loom2d.math.Color;
 	import loom2d.textures.Texture;
 	import loom2d.textures.TextureSmoothing;
@@ -25,7 +29,7 @@ package
 		private var environment:Environment;
 		
 		override public function run():void
-		{			
+		{	
 			// Comment out this line to turn off automatic scaling.
 			stage.scaleMode = StageScaleMode.LETTERBOX;
 			

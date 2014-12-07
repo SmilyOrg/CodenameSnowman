@@ -1,10 +1,11 @@
 package  {
-	import loom2d.display.DisplayObject;
+	import loom.admob.InterstitialAd;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
 	import loom2d.display.Sprite;
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
+	import loom2d.events.Touch;
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
@@ -15,6 +16,7 @@ package  {
 		private var h:int;
 		
 		private var background:Image;
+		private var cursor:Sprite;
 		
 		private var shadowLayer:Sprite = new Sprite();
 		private var ground:Sprite = new Sprite();
@@ -45,6 +47,9 @@ package  {
 		private var spawnRadiusMax:Number;
 		private var spawnRadiusStretch:Number;
 		
+		private var waves:Vector.<Wave> = new Vector.<Wave>();
+		private var currentWave:Number = 0;
+		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
 			this.h = h;
@@ -53,6 +58,9 @@ package  {
 			
 			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
 			ground.addChild(background);
+			
+			cursor = new Sprite();
+			cursor.addChild(new Image(Texture.fromAsset("assets/cursor.png")));
 			
 			addEntity(player = new Player(display));
 			addEntity(walls = new Walls());
@@ -73,15 +81,14 @@ package  {
 			addPine(600, 60);
 			addPine(580, 90);
 			addPine(605, 330);
-			addPine(40, 340);
-			addPine(60, 290);
-			addPine(100, 330);
+			addPine(35, 340);
+			addPine(75, 285);
+			addPine(110, 330);			
 			
 			//addAI(new ThinkyAI(display, 10));
 			//addAI(new ThinkyAI(display, 1));
 			//addAI(new ThinkyAI(display, 10));
 			//addAI(new ThinkyAI(display, 100));
-			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
 			
@@ -105,8 +112,37 @@ package  {
 			stage.addChild(shadowLayer);
 			stage.addChild(display);
 			stage.addChild(ui);
+			stage.addChild(cursor);
+			
+			var wave = new Wave();
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 2, 20);
+			wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 2, 20);
+			wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 2, 20);
+			wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 2, 20);
+			waves.push(wave);
+			
+			wave = new Wave();
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 3, 10);
+			wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 3, 10);
+			wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 3, 10);
+			wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 3, 10);
+			waves.push(wave);
+			
+			wave = new Wave();
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 2, 10);
+			wave.addSpawnPoint(new Point(320, 360), EnemyType.THINKY, 2, 10);
+			wave.addSpawnPoint(new Point(0, 180), EnemyType.THINKY, 2, 10);
+			wave.addSpawnPoint(new Point(640, 180), EnemyType.THINKY, 2, 10);
+			waves.push(wave);
 			
 			reset();
+		}
+		
+		public function setCursorPosition(t:Touch)
+		{
+			var pos = t.getLocation(ground);
+			cursor.x = pos.x - cursor.width / 2;
+			cursor.y = pos.y - cursor.height / 2;
 		}
 		
 		public function addPine(x:int, y:int)
@@ -126,7 +162,7 @@ package  {
 			addEntity(snowball);
 		}
 		
-		private function addAI(ai:AI) {
+		public function addAI(ai:AI) {
 			ai.onSnowball += throwSnowball;
 			ais.push(ai);
 			entities.push(ai);
@@ -162,13 +198,13 @@ package  {
 					player.startMakingSnowball();
 					break;
 				case 44: // Space
+					scoreUI.addScore(5);
 					player.charge();
 					break;
 			}
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
-			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -186,10 +222,10 @@ package  {
 					player.endMakingSnowball();
 					break;
 				case 44: // space
-					scoreUI.addScore(5);
 					if (snowballUi.throwSnowball())
 					{
 						throwSnowball(player, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
+						player.resetCharge();
 					}
 					break;
 				case 10: // G
@@ -210,23 +246,21 @@ package  {
 		}
 		
 		public override function tick(t:Number, dt:Number) {
+
 			var ai:AI;
 			
 			var i:int;
 			var j:int;
 			
-			spawnTimer += dt;
-			if (spawnTimer > spawnTime && ais.length < spawnMax) {
-				spawnTimer = 0;
-				if (Math.random() < 0.6) {
-					ai = new ThinkyAI(display);
-				} else {
-					ai = new SimpleAI(display);
+			if (currentWave < waves.length)
+			{
+				waves[currentWave].tick(dt);
+				
+				if (waves[currentWave].isFinished())
+				{
+					currentWave++;
+					trace("new wave");
 				}
-				var angle = Math.randomRange(0, Math.TWOPI);
-				var radius = Math.randomRange(spawnRadiusMin, spawnRadiusMax);
-				ai.setPosition(w/2+Math.cos(angle)*radius, h/2+Math.sin(angle)*radius);
-				addAI(ai);
 			}
 			
 			for (i = 0; i < entities.length; i++) {
@@ -248,7 +282,8 @@ package  {
 					if (snowball.checkCollision(pine))
 					{
 						pine.hit();
-						snowball.destroy();
+						if(!snowball.isYellowSnow())
+							snowball.destroy();
 					}
 				}
 				
@@ -257,11 +292,17 @@ package  {
 					snowball.destroy();
 				}
 				
+				if (snowball.checkCollision(walls))
+				{
+					snowball.destroy();
+				}
+				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
 					if (snowball.checkCollision(ai) && snowball.owner != ai) {
 						//ai.destroy();
-						snowball.destroy();
+						if(!snowball.isYellowSnow())
+							snowball.destroy();
 					}
 				}
 			}
@@ -277,7 +318,7 @@ package  {
 				
 				if (sb.canPickUp())
 				{
-					if (d < 7)
+					if (d < 10)
 					{
 						if (snowballUi.pickUpSnowball())
 						{
@@ -289,7 +330,7 @@ package  {
 				}
 				else
 				{
-					if (d >= 7)
+					if (d >= 10)
 					{
 						sb.enablePickUp();
 					}
@@ -308,15 +349,10 @@ package  {
 		}
 		
 		public override function render(t:Number) {
-			display.sortChildren(sortByY);
 			for (var i = 0; i < entities.length; i++) {
 				var entity = entities[i];
 				entity.render(t);
 			}
-		}
-		
-		private function sortByY(a:DisplayObject, b:DisplayObject):int {
-			return a.y < b.y ? -1 : a.y > b.y ? 1 : 0;
 		}
 		
 		private function flush() {
@@ -332,6 +368,19 @@ package  {
 					vector.splice(i, 1);
 				}
 			}
+		}
+		
+		public function checkCollissionWithEntities(e:Entity):Boolean
+		{
+			for (var i = 0; i < entities.length; i++) {
+				var ent = entities[i];
+				if (e != ent && e.checkCollision(ent)) {
+					if(e.getTypeName() == "Player")
+					return true;
+				}
+			}
+				
+			return false;
 		}
 		
 		public function getDisplay():DisplayObjectContainer

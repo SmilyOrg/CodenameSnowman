@@ -33,6 +33,8 @@ package
 			image = new Image(texture);
 			
 			environment.getDisplay().addChild(image);
+			
+			isCollidable = false;
 		}
 		
 		public function enablePickUp()

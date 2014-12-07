@@ -1,13 +1,14 @@
 package  
 {
 	import loom2d.display.Image;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	/**
 	 * ...
 	 * @author Jure Gregorin
 	 */
-	public class Footprint extends Entity
+	public class SnowballHole extends Entity
 	{
 		private static var texture:Texture = null;
 		private var image:Image = null;
@@ -16,7 +17,7 @@ package
 		
 		private static const MAX_TIME_ALIVE = 10;
 		
-		public function Footprint() 
+		public function SnowballHole() 
 		{
 			v.x = 0;
 			v.y = 0;
@@ -25,20 +26,21 @@ package
 			
 			if (texture == null)
 			{
-				texture = Texture.fromAsset("assets/footprint.png");
+				texture = Texture.fromAsset("assets/hole.png");
 			}
 			
 			image = new Image(texture);
 			
 			environment.getGround().addChild(image);
+			bounds = new Rectangle( -4, -4, 8, 8);
 			
 			isCollidable = false;
 		}
 		
 		override public function tick(t:Number, dt:Number)
 		{
-			image.x = p.x - 8;
-			image.y = p.y - 8;
+			image.x = p.x + bounds.left;
+			image.y = p.y + bounds.top + 8;
 			
 			timeAlive += dt;
 			
