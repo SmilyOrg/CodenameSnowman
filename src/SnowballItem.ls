@@ -12,13 +12,18 @@ package
 		private static var texture:Texture = null;
 		private var image:Image = null;
 		private var isFresh = true;
+		private var fades:Boolean;
+		private var fadeTimer = 0;
+		private static const FADE_DURATION = 20;
 		
-		public function SnowballItem() 
+		public function SnowballItem(doesFade:Boolean) 
 		{
 			v.x = 0;
 			v.y = 0;
 			a.x = 0;
 			a.y = 0;
+			
+			fades = doesFade;
 			
 			if (texture == null)
 			{
@@ -27,7 +32,7 @@ package
 			
 			image = new Image(texture);
 			
-			environment.getGround().addChild(image);
+			environment.getDisplay().addChild(image);
 		}
 		
 		public function enablePickUp()
@@ -44,6 +49,17 @@ package
 		{
 			image.x = p.x - 4;
 			image.y = p.y - 4;
+			
+			if (fades)
+			{
+				fadeTimer += dt;
+				image.alpha = 1 - fadeTimer / FADE_DURATION;
+				
+				if (fadeTimer > FADE_DURATION)
+				{
+					destroy();
+				}
+			}
 			
 			super.tick(t, dt);
 		}
