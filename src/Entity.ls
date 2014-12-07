@@ -34,7 +34,19 @@ package
 		protected static const DRAG_WATER = 0.05;
 		protected static const SOUND_SCALE = 0.15;
 		
-		public function Entity() {}
+		public static var environment:Environment = null;
+		
+		public function Entity() { }
+		
+		public function setPosition(x: Number, y: Number)
+		{
+			p.x = x;
+			p.y = y;
+		}
+		
+		public function getPosition():Point {
+			return p;
+		}
 		
 		/** Set sound position and velocity to entity position and velocity */
 		protected function placeSound(sound:Sound)
@@ -101,7 +113,6 @@ package
 			if (state == STATE_DESTROYED) return false;
 			state = STATE_DESTROYED;
 			return true;
-		}
-		
+		}		
 	}
 }

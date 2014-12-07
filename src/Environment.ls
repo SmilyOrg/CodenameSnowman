@@ -1,4 +1,5 @@
 package  {
+	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
 	import loom2d.display.Sprite;
 	import loom2d.display.Stage;
@@ -14,6 +15,7 @@ package  {
 		
 		private var background:Image;
 		
+		private var ground:Sprite = new Sprite();
 		private var display:Sprite = new Sprite();
 		
 		private var arena:Entity;
@@ -38,8 +40,10 @@ package  {
 			this.w = w;
 			this.h = h;
 			
+			Entity.environment = this;
+			
 			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
-			display.addChild(background);
+			ground.addChild(background);
 			
 			addEntity(player = new Player(display));
 			addEntity(pine = new Pine(display));
@@ -55,7 +59,9 @@ package  {
 			spawnRadiusMax = 300;
 			
 			display.scale = 2;
+			ground.scale = 2;
 			
+			stage.addChild(ground);
 			stage.addChild(display);
 			
 			reset();
@@ -167,6 +173,11 @@ package  {
 				ai.tick(t, dt);
 			}
 			
+			for (i = 0; i < entities.length; i++) {
+				var entity:Entity = entities[i];
+				entity.tick(t, dt);
+			}
+			
 			flush();
 			
 			t += dt;
@@ -190,8 +201,19 @@ package  {
 				var entity = vector[i];
 				if (entity.state == Entity.STATE_DESTROYED) {
 					vector.splice(i, 1);
+					entity.destroy();
 				}
 			}
+		}
+		
+		public function getDisplay():DisplayObjectContainer
+		{
+			return display;
+		}
+		
+		public function getGround():DisplayObjectContainer
+		{
+			return ground;
 		}
 		
 	}

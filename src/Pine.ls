@@ -12,23 +12,26 @@ package
 	 */
 	public class Pine extends Entity implements IHittable
 	{
-		private static var _texture:Vector.<Texture> = new <Texture>(3);
+		private static var texture:Texture = null;
+		private static var textureOverlay:Texture = null;
 		
-		private var frame:Number = 1;
-		private var counter:Number = 0;
+		private static const MAX_OVERLAY_TIME = 10;
+		private var overlayTime:Number = 0;
 		private var image:Image;
+		private var overlay:Image;
 		
 		public function Pine(container: DisplayObjectContainer):void
 		{
-			if (_texture[0] == null)
-			{
-				_texture[0] = Texture.fromAsset("assets/Tree.png");
-				_texture[1] = Texture.fromAsset("assets/Tree2.png");
-				_texture[2] = Texture.fromAsset("assets/Tree3.png");
-			}
+			texture = Texture.fromAsset("assets/Tree.png");
+			textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
 			
-			image = new Image(_texture[frame]);
+			image = new Image(texture);
 			container.addChild(image);
+			
+			overlay = new Image(textureOverlay);
+			container.addChild(overlay);
+			
+			overlayTime = MAX_OVERLAY_TIME;
 			
 			v = new Point(0, 0);
 			a = new Point(0, 0);
@@ -39,29 +42,28 @@ package
 		
 		public override function tick(t:Number, dt:Number):void
 		{			
-			if (frame < 2)
+			if (overlayTime > MAX_OVERLAY_TIME)
 			{
-				counter += dt;
-				
-				if (counter > 1)
-				{
-					frame++;
-					counter -= 1;
-				}
+				image.alpha = 1;
+			}
+			else
+			{
+				overlayTime += dt;
+				overlay.alpha = overlayTime / MAX_OVERLAY_TIME;
 			}
 			
-			image.texture = _texture[frame];
 			image.x = p.x;
 			image.y = p.y;
+			
+			overlay.x = p.x;
+			overlay.y = p.y;
 		}
 		
 		/* INTERFACE IHittable */
 		
 		public function hit():void 
 		{
-			frame = 0;
-			counter = 0;
-			image.texture = _texture[frame];
+			overlayTime = 0;
 		}
 		
 	}

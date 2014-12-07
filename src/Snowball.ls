@@ -38,7 +38,7 @@ package
 			super.render(t);
 		}
 		
-		public function destroy():Boolean
+		public override function destroy():Boolean
 		{
 			if (!super.destroy()) return false;
 			image.removeFromParent();
