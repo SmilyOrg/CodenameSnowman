@@ -50,7 +50,7 @@ package  {
 			hasFreeWill = true;
 		}
 		
-		private function onFootstep()
+		/*private function onFootstep()
 		{
 			footstep.setPitch(Math.random() * 0.5 + 0.7);
 			footstep.play();
@@ -58,7 +58,7 @@ package  {
 			var footprint = new Footprint();
 			footprint.setPosition(p.x, p.y + 8);
 			Entity.environment.addEntity(footprint);
-		}
+		}*/
 		
 		override public function tick(t:Number, dt:Number) {
 			
@@ -71,7 +71,7 @@ package  {
 				moving = v.length > 10;
 				if (moving || moving0) {
 					if (footstepTime > footstepTreshold || moving0 != moving) {
-						onFootstep();
+						//onFootstep();
 						if (moving0 != moving) {
 							footstepTime = 0;
 						} else {

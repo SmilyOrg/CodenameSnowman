@@ -35,8 +35,6 @@ package
 			
 			var speed = 240;
 			
-			trace(charge, maxCharge);
-			
 			if (charge == maxCharge) image.color = 0xDFDF00;
 			
 			v.x = direction.x * speed;

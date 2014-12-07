@@ -81,9 +81,9 @@ package  {
 			addPine(600, 60);
 			addPine(580, 90);
 			addPine(605, 330);
-			addPine(40, 340);
-			addPine(60, 290);
-			addPine(100, 330);			
+			addPine(35, 340);
+			addPine(75, 285);
+			addPine(110, 330);			
 			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
@@ -200,7 +200,6 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
-			trace(e.keyCode);
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -223,6 +222,7 @@ package  {
 						var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
 						snowballs.push(snowball);
 						addEntity(snowball);
+						player.resetCharge();
 					}
 					break;
 				case 10: // G
@@ -283,7 +283,6 @@ package  {
 				
 				if (snowball.checkCollision(walls))
 				{
-					trace("destroy");
 					snowball.destroy();
 				}
 				
@@ -365,7 +364,6 @@ package  {
 				var ent = entities[i];
 				if (e != ent && e.checkCollision(ent)) {
 					if(e.getTypeName() == "Player")
-						trace(e.getTypeName(), ent.getTypeName());
 					return true;
 				}
 			}
