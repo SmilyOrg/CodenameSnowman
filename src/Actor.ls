@@ -54,7 +54,7 @@ package  {
 			footstep.play();
 			
 			var footprint = new Footprint();
-			footprint.setPosition(p.x - 8, p.y);
+			footprint.setPosition(p.x, p.y + 8);
 			Entity.environment.addEntity(footprint);
 		}
 		

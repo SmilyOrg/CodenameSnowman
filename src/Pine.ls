@@ -46,9 +46,9 @@ package
 			
 			v = new Point(0, 0);
 			a = new Point(0, 0);
-			p = new Point(50, 100);
+			p = new Point(100, 100);
 			
-			bounds = new Rectangle(20, 0, 8, 48);
+			bounds = new Rectangle(-8, -40, 16, 30);
 		}
 		
 		public override function tick(t:Number, dt:Number):void
@@ -63,14 +63,14 @@ package
 				overlay.alpha = overlayTime / MAX_OVERLAY_TIME;
 			}
 			
-			image.x = p.x;
-			image.y = p.y;
+			image.x = p.x - 32;
+			image.y = p.y - 56;
 			
-			overlay.x = p.x;
-			overlay.y = p.y;
+			overlay.x = image.x;
+			overlay.y = image.y;
 			
-			shadow.x = p.x + 12;
-			shadow.y = p.y;
+			shadow.x = image.x + 12;
+			shadow.y = image.y;
 		}
 		
 		/* INTERFACE IHittable */

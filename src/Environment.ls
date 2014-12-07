@@ -25,6 +25,8 @@ package  {
 		private var ais = new Vector.<AI>();
 		private var player:Player;
 		private var pine:Pine;
+		private var walls:Walls;
+		private var flag:Flag;
 		private var snowballs = new Vector.<Snowball>();
 		
 		private var entities = new Vector.<Entity>();
@@ -50,6 +52,8 @@ package  {
 			
 			addEntity(player = new Player(display));
 			addEntity(pine = new Pine(display));
+			addEntity(walls = new Walls());
+			addEntity(flag = new Flag());
 			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);

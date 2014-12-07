@@ -13,7 +13,7 @@ package
 		private static var snowballTexture:Texture = null;
 		
 		private static const MAX_SNOWBALLS = 5;
-		private var snowballCount = 3;
+		private var snowballCount = 5;
 		
 		private var background:Image = null;
 		private var snowballs:Vector.<Image> = new Vector.<Image>(5);

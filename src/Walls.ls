@@ -1,52 +1,44 @@
 package  
 {
 	import loom2d.display.Image;
+	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
 	
 	/**
 	 * ...
 	 * @author Jure Gregorin
 	 */
-	public class Footprint extends Entity
+	public class Walls extends Entity
 	{
 		private static var texture:Texture = null;
 		private var image:Image = null;
 		
-		private var timeAlive:Number = 0;
-		
-		private static const MAX_TIME_ALIVE = 10;
-		
-		public function Footprint() 
+		public function Walls() 
 		{
 			v.x = 0;
 			v.y = 0;
 			a.x = 0;
 			a.y = 0;
 			
+			p.x = 320;
+			p.y = 180;
+			
+			bounds = new Rectangle(p.x - 95, p.y - 53, 190, 106);
+			
 			if (texture == null)
 			{
-				texture = Texture.fromAsset("assets/footprint.png");
+				texture = Texture.fromAsset("assets/walls.png");
 			}
 			
 			image = new Image(texture);
+			image.x = bounds.left;
+			image.y = bounds.top;
 			
-			environment.getGround().addChild(image);
+			environment.getDisplay().addChild(image);
 		}
 		
 		override public function tick(t:Number, dt:Number)
-		{
-			image.x = p.x - 8;
-			image.y = p.y - 8;
-			
-			timeAlive += dt;
-			
-			image.alpha = 1 - (timeAlive / MAX_TIME_ALIVE);
-			
-			if (timeAlive > MAX_TIME_ALIVE)
-			{
-				destroy();
-			}
-			
+		{			
 			super.tick(t, dt);
 		}
 		
@@ -56,7 +48,5 @@ package
 			image.removeFromParent();
 			return true;
 		}
-		
 	}
-	
 }
