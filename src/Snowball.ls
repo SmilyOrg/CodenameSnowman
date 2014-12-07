@@ -12,13 +12,16 @@ package
 	 */
 	public class Snowball extends Entity
 	{
+		public var owner:Actor;
 		private var image:Image;
 		private var shadowImage:Image;
 		private static var texture:Texture;
 		private static var shadowTexture:Texture;
 		
-		public function Snowball(container:DisplayObjectContainer, origin:Point, direction:Point, charge:Number, maxCharge:Number) 
+		public function Snowball(container:DisplayObjectContainer, owner:Actor, origin:Point, direction:Point, charge:Number, maxCharge:Number) 
 		{
+			this.owner = owner;
+			
 			if (texture == null)
 				texture = Texture.fromAsset("assets/snowball.png");
 				
@@ -63,6 +66,7 @@ package
 			if (!super.destroy()) return false;
 			image.removeFromParent(true);
 			shadowImage.removeFromParent(true);
+			owner = null;
 			return true;
 		}
 	}

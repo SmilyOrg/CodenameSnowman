@@ -77,6 +77,10 @@ package  {
 			addPine(60, 290);
 			addPine(100, 330);
 			
+			//addAI(new ThinkyAI(display, 10));
+			//addAI(new ThinkyAI(display, 1));
+			//addAI(new ThinkyAI(display, 10));
+			//addAI(new ThinkyAI(display, 100));
 			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
@@ -123,6 +127,7 @@ package  {
 		}
 		
 		private function addAI(ai:AI) {
+			ai.onSnowball += throwSnowball;
 			ais.push(ai);
 			entities.push(ai);
 		}
@@ -184,9 +189,7 @@ package  {
 					scoreUI.addScore(5);
 					if (snowballUi.throwSnowball())
 					{
-						var snowball = new Snowball(display, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
-						snowballs.push(snowball);
-						addEntity(snowball);
+						throwSnowball(player, player.getPosition(), player.getDirection(), player.currentCharge, player.maxCharge);
 					}
 					break;
 				case 10: // G
@@ -197,6 +200,13 @@ package  {
 					}
 					break;
 			}
+		}
+		
+		private function throwSnowball(owner:Actor, position:Point, velocity:Point, charge:Number, maxCharge:Number) {
+			//trace(position, velocity, charge, maxCharge);
+			var snowball = new Snowball(display, owner, position, velocity, charge, maxCharge);
+			snowballs.push(snowball);
+			addEntity(snowball);
 		}
 		
 		public override function tick(t:Number, dt:Number) {
@@ -249,8 +259,8 @@ package  {
 				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
-					if (snowball.checkCollision(ai)) {
-						ai.destroy();
+					if (snowball.checkCollision(ai) && snowball.owner != ai) {
+						//ai.destroy();
 						snowball.destroy();
 					}
 				}
