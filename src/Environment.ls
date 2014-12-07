@@ -1,5 +1,6 @@
 package  {
 	import loom.admob.InterstitialAd;
+	import loom2d.display.DisplayObject;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
 	import loom2d.display.Sprite;
@@ -349,10 +350,15 @@ package  {
 		}
 		
 		public override function render(t:Number) {
+			display.sortChildren(sortByY);
 			for (var i = 0; i < entities.length; i++) {
 				var entity = entities[i];
 				entity.render(t);
 			}
+		}
+		
+		private function sortByY(a:DisplayObject, b:DisplayObject):int {
+			return a.y < b.y ? -1 : a.y > b.y ? 1 : 0;
 		}
 		
 		private function flush() {
