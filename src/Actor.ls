@@ -22,13 +22,14 @@ package  {
 			footstep.setGain(0.1);
 		}
 		
-		public function getPosition():Point {
-			return p;
-		}
-		
-		public function setPosition(x:Number, y:Number) {
-			p.x = x;
-			p.y = y;
+		private function onFootstep()
+		{
+			footstep.setPitch(Math.random() * 0.5 + 0.7);
+			footstep.play();
+			
+			var footprint = new Footprint();
+			footprint.setPosition(p.x, p.y);
+			Entity.environment.addEntity(footprint);
 		}
 		
 		override public function tick(t:Number, dt:Number) {
@@ -39,8 +40,7 @@ package  {
 			moving = v.length > 10;
 			if (moving || moving0) {
 				if (footstepTime > footstepTreshold || moving0 != moving) {
-					footstep.setPitch(Math.random() * 0.5 + 0.7);
-					footstep.play();
+					onFootstep();
 					if (moving0 != moving) {
 						footstepTime = 0;
 					} else {
