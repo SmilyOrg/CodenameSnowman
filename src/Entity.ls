@@ -33,6 +33,11 @@ package
 		protected var a:Point;
 		
 		public var bounds:Rectangle = new Rectangle();
+		private var boundsDirty:Boolean = true;
+		private var btl:Point;
+		private var btr:Point;
+		private var bbl:Point;
+		private var bbr:Point;
 		
 		protected static const DRAG_AIR = 0.01;
 		protected static const DRAG_WATER = 0.05;
@@ -92,11 +97,17 @@ package
 			var lp1:Point = p1-p;
 			var lp2:Point = p2-p;
 			
-			var rect = bounds;
-			return intersectLineLine(lp1, lp2, new Point(rect.left, rect.top), new Point(rect.right, rect.top), result) ||
-			       intersectLineLine(lp1, lp2, new Point(rect.right, rect.top), new Point(rect.right, rect.bottom), result) ||
-			       intersectLineLine(lp1, lp2, new Point(rect.right, rect.bottom), new Point(rect.left, rect.bottom), result) ||
-			       intersectLineLine(lp1, lp2, new Point(rect.left, rect.bottom), new Point(rect.left, rect.top), result);
+			if (boundsDirty) {
+				btl = new Point(bounds.left, bounds.top);
+				btr = new Point(bounds.right, bounds.top);
+				bbl = new Point(bounds.left, bounds.bottom);
+				bbr = new Point(bounds.right, bounds.bottom);
+				boundsDirty = false;
+			}
+			return intersectLineLine(lp1, lp2, btl, btr, result) ||
+			       intersectLineLine(lp1, lp2, btr, bbr, result) ||
+			       intersectLineLine(lp1, lp2, bbr, bbl, result) ||
+			       intersectLineLine(lp1, lp2, bbl, btl, result);
 		}
 		
 		public static function intersectLineLine(p1:Point, p2:Point, p3:Point, p4:Point, result:Point):Boolean {

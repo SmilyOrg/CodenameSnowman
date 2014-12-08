@@ -9,6 +9,7 @@ package  {
 		
 		public static var STATE_WANDER = 10;
 		public static var STATE_AIMING = 11;
+		private var STATE_GOAL   = 12;
 		
 		private var basic:BasicActor;
 		
@@ -16,14 +17,16 @@ package  {
 		private var aimTime = 0.2;
 		private var difficulty:Number;
 		
-		public function ThinkyAI(container:DisplayObjectContainer, difficulty:Number = 1) {
+		private var goal:Point;
+		
+		public function ThinkyAI(container:DisplayObjectContainer, difficulty:Number = 0) {
 			this.difficulty = difficulty;
 			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
 			bounds = new Rectangle(-10, -16, 20, 32);
 			basic.handleDirection(v);
 		}
 		
-		private function changeDirection(directionality:Number = 0.25) {
+		private function changeDirection(target:Point, directionality:Number = 0.25) {
 			var deadzone = 20;
 			moveLeft = Math.random() > (target.x > p.x+deadzone ? 0.5+directionality : target.x < p.x-deadzone ? 0.5-directionality : 1);
 			moveRight = Math.random() > (target.x > p.x+deadzone ? 0.5-directionality : target.x < p.x-deadzone ? 0.5+directionality : 1);
@@ -35,23 +38,25 @@ package  {
 			return min+(max-min)*(1-Math.exp(-difficulty));
 		}
 		
+		private function updateGoal() {
+			goal = environment.getClosestNavPoint(this);
+		}
+		
 		override public function tick(t:Number, dt:Number) {
 			if (state == STATE_DESTROYED) return;
-			
-			target = environment.getClosestNavPoint(this);
 			
 			switch (state) {
 				case STATE_IDLE:
 					moveLeft = moveRight = moveUp = moveDown = false;
 					if (Math.random() < getParam(0.01, 0.2)) {
 						state = STATE_WANDER;
-						changeDirection();
+						changeDirection(target);
 					} else if (Math.random() < getParam(0.005, 0.2)) {
 						state = STATE_AIMING;
 					}
 					break;
 				case STATE_AIMING:
-					changeDirection(1);
+					changeDirection(target, 1);
 					aimTimer += dt;
 					if (aimTimer > aimTime*getParam(1, 0.5)) {
 						aimTimer = 0;
@@ -59,13 +64,22 @@ package  {
 						state = STATE_IDLE;
 					}
 					break;
-				case STATE_WANDER:
-					if (Math.random() < getParam(0.01, 0.03)) {
-						state = STATE_IDLE;
+				case STATE_GOAL:
+					if (Math.random() < 0.05) {
+						state = STATE_WANDER;
 					}
-					
-					if (Math.random() < getParam(0.05, 0.3)) {
-						changeDirection();
+					if (Math.random() < 0.05) {
+						updateGoal();
+					}
+					changeDirection(goal);
+					break;
+				case STATE_WANDER:
+					if (Math.random() < getParam(0.02, 0.04)) {
+						state = STATE_GOAL;
+					} else if (Math.random() < getParam(0.01, 0.03)) {
+						state = STATE_IDLE;
+					} else if (Math.random() < getParam(0.05, 0.3)) {
+						changeDirection(target);
 					}
 					
 					var s:Point;
@@ -98,7 +112,7 @@ package  {
 		}
 		
 		override public function render(t:Number) {
-			basic.render(p);
+			basic.render(this);
 			super.render(t);
 		}
 		

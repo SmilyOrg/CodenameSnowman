@@ -13,6 +13,8 @@ package
 	 */
 	public class Pine extends Entity implements IHittable
 	{
+		public static var STATE_SHAKING = 21;
+		
 		private static var texture:Texture = null;
 		private static var textureOverlay:Texture = null;
 		
@@ -26,7 +28,6 @@ package
 		private var overlay:Image;
 		private var shadow:Image;
 		private var pineAnim:AnimActor;
-		private var isHit:Boolean = false;
 		private var lastFrame:int = -1;
 		
 		public function Pine(container: DisplayObjectContainer):void
@@ -38,7 +39,9 @@ package
 			if(textureOverlay == null)
 				textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
 			
-			pineAnim = new AnimActor("assets/tree_shake.png", 64, 64);
+			state = STATE_IDLE;
+			
+			pineAnim = new AnimActor(Texture.fromAsset("assets/tree_shake.png"), 64, 64);
 			//pineAnim.loop = false;
 			pineAnim.play();
 			display.addChild(pineAnim);
@@ -106,11 +109,11 @@ package
 			pineAnim.advanceTime(dt*2);
 			
 			if (lastFrame == pineAnim.numFrames-1 && pineAnim.currentFrame == 0) {
-				isHit = false;
+				state = STATE_IDLE;
 				lastFrame = -1;
 			}
 			
-			if (!isHit) {
+			if (state == STATE_IDLE) {
 				pineAnim.currentFrame = 0;
 			} else {
 				lastFrame = pineAnim.currentFrame;
@@ -132,7 +135,7 @@ package
 				environment.addSnowball(p.x + (i % 2 * 2 - 1) * Math.floor((i+1) / 2) * 12, p.y + 8);
 			}
 			
-			isHit = true;
+			state = STATE_SHAKING;
 			lastFrame = -1;
 			pineAnim.currentFrame = 0;
 			

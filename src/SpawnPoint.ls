@@ -47,7 +47,7 @@ package
 					ai = new SimpleAI(Entity.environment.getDisplay());
 					break;
 				case EnemyType.THINKY:
-					ai = new ThinkyAI(Entity.environment.getDisplay());
+					ai = new ThinkyAI(Entity.environment.getDisplay(), 0);
 					break;
 			}
 			
