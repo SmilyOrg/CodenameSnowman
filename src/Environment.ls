@@ -10,6 +10,7 @@ package  {
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
 	import loom2d.events.Touch;
+	import loom2d.math.Color;
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
@@ -621,12 +622,20 @@ package  {
 			return false;
 		}
 		
-		private function snowballSplash(ball:Snowball, hitTree:Boolean = false) {
+		private function snowballSplash(ball:Snowball) {
+			if (ball.isYellowSnow()) {
+				snowballParticles.startColor = new Color(0xDF, 0xDF, 0x00, 0.30);
+				snowballParticles.endColor = new Color(0xDF, 0xDF, 0x00, 0);
+			} else {
+				snowballParticles.startColor = new Color(0xFF, 0xFF, 0xFF, 0.72);
+				snowballParticles.endColor = new Color(0xFF, 0xFF, 0xFF, 0);
+			}
+			
 			snowballParticles.emitAngle = (Math.atan2(ball.getVelocity().y, ball.getVelocity().x));
 			
 			snowballParticles.emitterX = ball.getPosition().x;
 			snowballParticles.emitterY = ball.getPosition().y;
-			snowballParticles.populate(5, 0);
+			snowballParticles.populate(3, 0);
 		}
 		
 		public function getDisplay():DisplayObjectContainer
