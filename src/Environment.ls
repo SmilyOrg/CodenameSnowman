@@ -72,7 +72,8 @@ package  {
 			
 			Entity.environment = this;
 			
-			background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
+			//background = new Image(Texture.fromAsset("assets/bg_perspective.png"));
+			background = new Image(Texture.fromAsset("assets/snowman_bg.png"));
 			ground.addChild(background);
 			
 			addEntity(player = new Player(display));
