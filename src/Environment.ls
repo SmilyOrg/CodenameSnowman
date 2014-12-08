@@ -222,7 +222,7 @@ package  {
 					player.startMakingSnowball();
 					break;
 				case 44: // Space
-					scoreUI.addScore(5);
+					//scoreUI.addScore(5);
 					player.charge();
 					break;
 			}
@@ -375,6 +375,9 @@ package  {
 					ai = ais[j];
 					if (snowball.owner != ai && snowball.checkCollision(ai)) {
 						ai.destroy();
+						if (snowball.owner == player) {
+							scoreUI.addScore(ai.score);
+						}
 						if(!snowball.isYellowSnow())
 							snowball.destroy();
 					}

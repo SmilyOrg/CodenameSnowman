@@ -7,6 +7,8 @@ package  {
 		
 		public var onDeath:Function = null;
 		
+		protected var baseScore:int = 10;
+		
 		public function AI() {
 			
 		}
@@ -19,6 +21,9 @@ package  {
 			return super.destroy();
 		}
 		
+		public function get score():int {
+			return baseScore;
+		}
 	}
 	
 }
