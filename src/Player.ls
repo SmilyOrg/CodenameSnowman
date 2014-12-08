@@ -154,6 +154,8 @@ package  {
 		{
 			lifes--;
 			
+			environment.getSnowballUi().setHealthValue(lifes);
+			
 			return lifes <= 0;
 		}
 		
