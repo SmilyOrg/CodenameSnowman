@@ -38,6 +38,7 @@ package  {
 		override public function tick(t:Number, dt:Number) {
 			if (state == STATE_DESTROYED) return;
 			
+			target = environment.getClosestNavPoint(this);
 			
 			switch (state) {
 				case STATE_IDLE:
