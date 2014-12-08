@@ -26,10 +26,6 @@ package  {
 		
 		private var at:Number = 0;
 		
-		//DEBUG
-		public var debug:Boolean = false;
-		private var lastFrame:int = -1;
-		
 		public function BasicActor(container:DisplayObjectContainer, shadowContainer:DisplayObjectContainer, color:int = 0xFFFFFF) {
 			//footstep = Sound.load("assets/sound/snow_tread_1.ogg");
 			//footstep.setGain(0.1);
@@ -162,11 +158,6 @@ package  {
 						activeShadow.currentFrame = 0;
 						at = 0;
 					}
-			}
-			
-			if (lastFrame != activeAnim.currentFrame && debug) {
-				trace(activeAnim.currentFrame + " | " + a.state);
-				lastFrame = activeAnim.currentFrame;
 			}
 			
 			
