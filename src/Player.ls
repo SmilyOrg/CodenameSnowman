@@ -36,7 +36,7 @@ package  {
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
 			basic = new BasicActor(container, environment.getShadowLayer());
-			basic.debug = true;
+			decays = false;
 			
 			basic.handleDirection(v);
 			
@@ -98,6 +98,10 @@ package  {
 			else
 			{
 				(progressFg.getChildAt(0) as Image).color = 0xFFFFFF;
+			}
+			
+			if (state == STATE_DEAD) {
+				environment.death();
 			}
 		}
 		

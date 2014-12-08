@@ -35,7 +35,7 @@ package  {
 		protected var progressBg:Image = null;
 		protected var progressFg:Sprite = null;
 		
-		private var footstep:Sound;
+		//private var footstep:Sound;
 		private static var makingSound:Sound = null;
 		
 		//DYING ANIMATONS
@@ -45,8 +45,8 @@ package  {
 		private var deathTimer:Number = 0;
 		
 		public function Actor() {
-			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
-			footstep.setGain(0.1);
+			//footstep = Sound.load("assets/sound/snow_tread_1.ogg");
+			//footstep.setGain(0.1);
 			
 			if (makingSound == null)
 			{

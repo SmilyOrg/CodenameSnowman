@@ -1,4 +1,5 @@
 package  {
+	import extensions.PDParticleSystem;
 	import loom.admob.InterstitialAd;
 	import loom.Application;
 	import loom2d.display.DisplayObject;
@@ -52,6 +53,8 @@ package  {
 		private var spawnRadiusMin:Number;
 		private var spawnRadiusMax:Number;
 		private var spawnRadiusStretch:Number;
+		
+		private var snowballParticles:PDParticleSystem;
 		
 		private var navPoints:Vector.<Point> = new Vector.<Point>();
 		
@@ -162,6 +165,12 @@ package  {
 			stage.addChild(ui);
 			debug = new Quad(5, 5, 0x00FF00, true, true);
 			display.addChild(debug);
+			
+			//Snowball particles
+			var path = "assets/particles/snowball-splash.pex";
+			var tex = Texture.fromAsset("assets/particles/snowball-splash.png");
+			snowballParticles = PDParticleSystem.loadLiveSystem(path, tex);
+			fogLayer.addChild(snowballParticles);
 			
 			var wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 1, 20, 1);
@@ -382,7 +391,7 @@ package  {
 			stopped = true;
 		}
 		
-		private function death()
+		public function death()
 		{
 			setMessage("You were defeated!", restart);
 			started = false;
@@ -414,6 +423,7 @@ package  {
 			snowballUi.tick(t, dt);
 			messageUI.tick(t, dt);
 			whiteoutUI.tick(t, dt);
+			snowballParticles.advanceTime(dt);
 			
 			var ai:AI;
 			
@@ -463,8 +473,10 @@ package  {
 					if (snowball.checkCollision(pine))
 					{
 						pine.hit();
-						if(!snowball.isYellowSnow())
+						snowballSplash(snowball);
+						if (!snowball.isYellowSnow()) {
 							snowball.destroy();
+						}
 						else
 							snowball.playSound();
 					}
@@ -475,11 +487,14 @@ package  {
 					if (snowballOwner != ai && snowball.checkCollision(ai)) {
 						//ai.destroy();
 						ai.die();
+						snowballSplash(snowball);
 						if (snowball.owner == player) {
 							scoreUI.addScore(ai.score);
 						}
-						if(!snowball.isYellowSnow())
+						if(!snowball.isYellowSnow()) {
+							snowballSplash(snowball);
 							snowball.destroy();
+						}
 						else
 							snowball.playSound();
 					}
@@ -489,9 +504,11 @@ package  {
 				{
 					if (player.takeDamage())
 					{
-						death();
+						player.die();
+						//death();
 					}
 					
+					snowballSplash(snowball);
 					snowball.destroy();
 				}
 				
@@ -503,6 +520,7 @@ package  {
 				
 				if (snowball.checkCollision(walls))
 				{
+					snowballSplash(snowball);
 					snowball.destroy();
 				}
 			}
@@ -606,6 +624,14 @@ package  {
 			}
 				
 			return false;
+		}
+		
+		private function snowballSplash(ball:Snowball, hitTree:Boolean = false) {
+			snowballParticles.emitAngle = (Math.atan2(ball.getVelocity().y, ball.getVelocity().x));
+			
+			snowballParticles.emitterX = ball.getPosition().x;
+			snowballParticles.emitterY = ball.getPosition().y;
+			snowballParticles.populate(5, 0);
 		}
 		
 		public function getDisplay():DisplayObjectContainer
