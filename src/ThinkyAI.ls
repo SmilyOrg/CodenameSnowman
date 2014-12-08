@@ -107,6 +107,10 @@ package  {
 			super.tick(t, dt);
 		}
 		
+		override public function get score():int {
+			return baseScore * (difficulty+1);
+		}
+		
 		override public function render(t:Number) {
 			basic.render(this);
 			super.render(t);
