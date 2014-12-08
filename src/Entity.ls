@@ -16,7 +16,7 @@ package
 		public static var STATE_DESTROYED = 1;
 		public var state                  = STATE_IDLE;
 		protected var hasFreeWill         = false;
-		protected var isCollidable        = true;
+		public var isCollidable        = true;
 		
 		public var children:Vector.<Entity>;
 		
@@ -82,6 +82,29 @@ package
 		protected function resetPhysics()
 		{
 			p = v = oa = a = Point.ZERO;
+		}
+		
+		public function intersectBounds(p1:Point, p2:Point, result:Point):Boolean {
+			var lp1:Point = p1-p;
+			var lp2:Point = p2-p;
+			
+			var rect = bounds;
+			return intersectLineLine(lp1, lp2, new Point(rect.left, rect.top), new Point(rect.right, rect.top), result) ||
+			       intersectLineLine(lp1, lp2, new Point(rect.right, rect.top), new Point(rect.right, rect.bottom), result) ||
+			       intersectLineLine(lp1, lp2, new Point(rect.right, rect.bottom), new Point(rect.left, rect.bottom), result) ||
+			       intersectLineLine(lp1, lp2, new Point(rect.left, rect.bottom), new Point(rect.left, rect.top), result);
+		}
+		
+		public static function intersectLineLine(p1:Point, p2:Point, p3:Point, p4:Point, result:Point):Boolean {
+			var div:Number = ((p4.y-p3.y)*(p2.x-p1.x)-(p4.x-p3.x)*(p2.y-p1.y));
+			var ua:Number = ((p4.x-p3.x)*(p1.y-p3.y)-(p4.y-p3.y)*(p1.x-p3.x))/div;
+			var ub:Number = ((p2.x-p1.x)*(p1.y-p3.y)-(p2.y-p1.y)*(p1.x-p3.x))/div;
+			if (((ua >= 0) && (ua <= 1)) && ((ub >= 0) && (ub <= 1))) {
+				result.x = p1.x+ua*(p2.x-p1.x);
+				result.y = p1.y+ua*(p2.y-p1.y);
+				return true;
+			}
+			return false;
 		}
 		
 		/**
@@ -161,7 +184,7 @@ package
 				var opx = p.x;
 				p.x += moveByX(dt);
 				
-				if (environment.checkCollissionWithEntities(this))
+				if (environment.checkCollisionWithEntities(this))
 				{
 					p.x = opx;
 				}
@@ -169,7 +192,7 @@ package
 				var opy = p.y;
 				p.y += moveByY(dt);
 				
-				if (environment.checkCollissionWithEntities(this))
+				if (environment.checkCollisionWithEntities(this))
 				{
 					p.y = opy;
 				}				

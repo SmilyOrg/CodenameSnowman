@@ -3,6 +3,7 @@ package  {
 	import loom2d.display.DisplayObject;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
+	import loom2d.display.Quad;
 	import loom2d.display.Sprite;
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
@@ -47,8 +48,12 @@ package  {
 		private var spawnRadiusMax:Number;
 		private var spawnRadiusStretch:Number;
 		
+		private var navPoints:Vector.<Point> = new Vector.<Point>();
+		
 		private var waves:Vector.<Wave> = new Vector.<Wave>();
 		private var currentWave:Number = 0;
+		
+		private var debug:Quad;
 		
 		public function Environment(stage:Stage, w:int, h:int) {
 			this.w = w;
@@ -80,7 +85,44 @@ package  {
 			addPine(605, 330);
 			addPine(35, 340);
 			addPine(75, 285);
-			addPine(110, 330);			
+			addPine(110, 330);
+			
+			
+			var goal = new Point(w/2, h/2);
+			
+			navPoints.push(goal);
+			
+			navPoints.push(new Point(256, 178));
+			navPoints.push(new Point(380, 178));
+			
+			navPoints.push(new Point(320, 216));
+			navPoints.push(new Point(320, 260));
+			navPoints.push(new Point(320, 300));
+			
+			navPoints.push(new Point(320, 122));
+			navPoints.push(new Point(320, 86));
+			navPoints.push(new Point(320, 62));
+			
+			navPoints.push(new Point(250, 62));
+			navPoints.push(new Point(131, 119));
+			navPoints.push(new Point(104, 205));
+			navPoints.push(new Point(165, 293));
+			navPoints.push(new Point(238, 312));
+			navPoints.push(new Point(394, 309));
+			navPoints.push(new Point(506, 272));
+			navPoints.push(new Point(532, 188));
+			navPoints.push(new Point(516, 112));
+			navPoints.push(new Point(468, 54));
+			navPoints.push(new Point(374, 44));
+			
+			
+			
+			navPoints.sort(function(a:Point, b:Point):int {
+				var da = Point.distanceSquared(goal, a);
+				var db = Point.distanceSquared(goal, b);
+				return da < db ? -1 : da > db ? 1 : 0;
+			});
+			
 			
 			arena = new Entity();
 			arena.bounds = new Rectangle(0, 0, background.width, background.height);
@@ -105,6 +147,8 @@ package  {
 			stage.addChild(shadowLayer);
 			stage.addChild(display);
 			stage.addChild(ui);
+			debug = new Quad(5, 5, 0x00FF00, true, true);
+			display.addChild(debug);
 			
 			var wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 2, 20);
@@ -128,6 +172,50 @@ package  {
 			waves.push(wave);
 			
 			reset();
+		}
+		
+		public function getClosestNavPoint(actor:Actor):Point {
+			var source = actor.getPosition();
+			var np:Point;
+			var result:Point;
+			var los:Entity;
+			var found:Vector.<Point> = new Vector.<Point>();
+			var i:int;
+			for (i = 0; i < navPoints.length; i++) {
+				np = navPoints[i];
+				los = lineOfSight(source, np, entities, actor, result);
+				if (!los) {
+					found.push(np);
+					if (found.length > 3) break;
+				}
+			}
+			var minDist = Number.MAX_VALUE;
+			var min = np;
+			for (i = 0; i < found.length; i++) {
+				var f = found[i];
+				var dist = Point.distanceSquared(f, source);
+				if (dist < minDist) {
+					minDist = dist;
+					min = f;
+				}
+			}
+			return min;
+		}
+		
+		private function lineOfSight(source:Point, target:Point, ents:Vector.<Entity>, ignore:Entity, result:Point):Entity {
+			for (var i = 0; i < ents.length; i++) {
+				var entity:Entity = ents[i];
+				if (entity == ignore) continue;
+				if (!entity.isCollidable) continue;
+				if (entity.children) {
+					return lineOfSight(source, target, entity.children, ignore, result);
+				} else {
+					if (entity.intersectBounds(source, target, result)) {
+						return entity;
+					}
+				}
+			}
+			return null;
 		}
 		
 		public function addPine(x:int, y:int)
@@ -237,6 +325,8 @@ package  {
 			var i:int;
 			var j:int;
 			
+			var center = new Point(w/2, h/2);
+			
 			if (currentWave < waves.length)
 			{
 				waves[currentWave].tick(dt);
@@ -291,6 +381,13 @@ package  {
 					}
 				}
 			}
+			
+			//var cnp = getClosestNavPoint(player);
+			//var cnp = player.walkableLineOfSight(center, new Point(center.x, 0));
+			//trace(player.intersectBounds(center, new Point(center.x, 0), new Point()));
+			//var cnp = navPoints[Math.floor(navPoints.length*Math.random())];
+			//debug.x = cnp.x;
+			//debug.y = cnp.y;
 			
 			for (i = 0; i < snowballItems.length; i++)
 			{
@@ -360,7 +457,7 @@ package  {
 			}
 		}
 		
-		public function checkCollissionWithEntities(e:Entity):Boolean
+		public function checkCollisionWithEntities(e:Entity):Boolean
 		{
 			for (var i = 0; i < entities.length; i++) {
 				var ent = entities[i];
