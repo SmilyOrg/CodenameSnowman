@@ -36,6 +36,7 @@ package  {
 		public function Player(container:DisplayObjectContainer) {
 			//display = new Image(Texture.fromAsset("assets/eskimo.png"));
 			basic = new BasicActor(container, environment.getShadowLayer());
+			basic.debug = true;
 			
 			basic.handleDirection(v);
 			
@@ -61,10 +62,15 @@ package  {
 			}
 			breathTime += dt;
 			
-			if (state != STATE_THROWING && cd < cdTreshold && cd >= 0) {
+			if (state == STATE_THROWN && cd < cdTreshold && cd >= 0) {
 				cd += dt;
 			} else if (cd >= cdTreshold) {
 				cd = -1;
+				state = STATE_IDLE;
+			}
+			
+			if (state == STATE_THROWN) {
+				trace ("THROWN");
 			}
 			
 			if (chargeTimer != -1) {
@@ -111,7 +117,8 @@ package  {
 			chargeTimer = -1;
 			speed = 3000;
 			chargeSound.stop();
-			state = Entity.STATE_IDLE;
+			//state = Entity.STATE_IDLE;
+			state = STATE_THROWN;
 		}
 		
 		public function get currentCharge():Number {

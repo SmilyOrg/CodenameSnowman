@@ -11,6 +11,9 @@ package  {
 	public class Actor extends Entity {
 		
 		public static const STATE_THROWING = 3;
+		public static const STATE_THROWN   = 4;
+		public static const STATE_DYING	   = 5;
+		public static const STATE_DEAD	   = 6;
 		
 		public var moveUp:Boolean = false;
 		public var moveDown:Boolean = false;
@@ -93,10 +96,6 @@ package  {
 			super.tick(t, dt);
 		}
 		
-		public function onCooldown():Boolean {
-			return (cd >= 0 && cd < cdTreshold);
-		}
-		
 		public function startMakingSnowball():void {
 			trace("start making snowball");
 			if (!environment.getSnowballUi().hasMax())
@@ -110,6 +109,10 @@ package  {
 			trace("end making snowball");
 			isMakingSnowball = false;
 			snowballProgress = 0;
+		}
+		
+		public function die():void {
+			state = STATE_DEAD;
 		}
 		
 		override public function destroy():Boolean 

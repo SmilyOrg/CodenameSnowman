@@ -26,6 +26,10 @@ package  {
 		
 		private var at:Number = 0;
 		
+		//DEBUG
+		public var debug:Boolean = false;
+		private var lastFrame:int = -1;
+		
 		public function BasicActor(container:DisplayObjectContainer, shadowContainer:DisplayObjectContainer, color:int = 0xFFFFFF) {
 			//footstep = Sound.load("assets/sound/snow_tread_1.ogg");
 			//footstep.setGain(0.1);
@@ -151,7 +155,46 @@ package  {
 			var p = a.getPosition();
 			setAnimTime(activeAnim, at);
 			setAnimTime(activeShadow, at);
-			if (a.state == Actor.STATE_THROWING) {
+			
+			switch (a.state) {
+				case Actor.STATE_DYING:
+					activeAnim.currentFrame = 6;
+					activeShadow.currentFrame = 6;
+					break;
+				case Actor.STATE_DEAD:
+					activeAnim.currentFrame = 7;
+					activeShadow.currentFrame = 7;
+					break;
+				case Actor.STATE_THROWING:
+				case ThinkyAI.STATE_AIMING:
+					activeAnim.currentFrame = 4;
+					activeShadow.currentFrame = 4;
+					break;
+				case Actor.STATE_THROWN:
+					activeAnim.currentFrame = 5;
+					activeShadow.currentFrame = 5;
+					break;
+				case Entity.STATE_IDLE:
+					if (activeAnim.currentFrame > 3) {
+						activeAnim.currentFrame = 0;
+						activeShadow.currentFrame = 0;
+						at = 0;
+					}
+					break;
+				default:
+					if (!moving || activeAnim.currentFrame == 4 || activeAnim.currentFrame > 5) {
+						activeAnim.currentFrame = 0;
+						activeShadow.currentFrame = 0;
+						at = 0;
+					}
+			}
+			
+			if (lastFrame != activeAnim.currentFrame && debug) {
+				trace(activeAnim.currentFrame + " | " + a.state);
+				lastFrame = activeAnim.currentFrame;
+			}
+			
+			/*if (a.state == Actor.STATE_THROWING || a.state == ThinkyAI.STATE_AIMING) {
 				activeAnim.currentFrame = 4;
 				activeShadow.currentFrame = 4;
 			} else if (a.onCooldown()) {
@@ -165,7 +208,7 @@ package  {
 					activeAnim.currentFrame = 0;
 					activeShadow.currentFrame = 0;
 				}
-			}
+			}*/
 			
 			
 			activeAnim.x = p.x;

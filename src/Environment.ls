@@ -452,6 +452,7 @@ package  {
 			
 			for (i = 0; i < snowballs.length; i++) {
 				var snowball = snowballs[i];
+				var snowballOwner = snowball.owner;
 				if (snowball.state == Entity.STATE_DESTROYED)
 					continue;
 				
@@ -468,7 +469,7 @@ package  {
 				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
-					if (snowball.owner != ai && snowball.checkCollision(ai)) {
+					if (snowballOwner != ai && snowball.checkCollision(ai)) {
 						ai.destroy();
 						if (snowball.owner == player) {
 							scoreUI.addScore(ai.score);
@@ -478,7 +479,7 @@ package  {
 					}
 				}
 				
-				if (snowball.owner != player && snowball.checkCollision(player))
+				if (snowballOwner != player && snowball.checkCollision(player))
 				{
 					if (player.takeDamage())
 					{
