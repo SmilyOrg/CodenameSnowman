@@ -126,8 +126,6 @@ package  {
 			navPoints.push(new Point(468, 54));
 			navPoints.push(new Point(374, 44));
 			
-			
-			
 			navPoints.sort(function(a:Point, b:Point):int {
 				var da = Point.distanceSquared(goal, a);
 				var db = Point.distanceSquared(goal, b);
@@ -166,6 +164,10 @@ package  {
 			
 			var wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 1, 20, 1);
+			//wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 3000, 1, 1);
+			//wave.addSpawnPoint(new Point(400, 20), EnemyType.THINKY, 3000, 1, 2);
+			//wave.addSpawnPoint(new Point(500, 40), EnemyType.THINKY, 3000, 1, 3);
+			//wave.addSpawnPoint(new Point(200, 60), EnemyType.THINKY, 3000, 1, 4);
 			//wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 2, 20);
 			//wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 2, 20);
 			//wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 2, 20);
@@ -173,16 +175,27 @@ package  {
 			
 			wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 1, 10, 4);
-			//wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 3, 10);
-			//wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 3, 10);
-			//wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 3, 10);
+			wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 3, 10, 4);
+			wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 3, 10, 4);
+			wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 3, 10, 4);
+			waves.push(wave);
+			
+			wave = new Wave();
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 1, 0, 2);
 			waves.push(wave);
 			
 			wave = new Wave();
 			wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 1, 10, 4);
-			//wave.addSpawnPoint(new Point(320, 360), EnemyType.THINKY, 2, 10);
-			//wave.addSpawnPoint(new Point(0, 180), EnemyType.THINKY, 2, 10);
-			//wave.addSpawnPoint(new Point(640, 180), EnemyType.THINKY, 2, 10);
+			wave.addSpawnPoint(new Point(320, 360), EnemyType.THINKY, 1, 10, 4);
+			wave.addSpawnPoint(new Point(0, 180), EnemyType.THINKY, 1, 10, 4);
+			wave.addSpawnPoint(new Point(640, 180), EnemyType.THINKY, 1, 10, 4);
+			waves.push(wave);
+			
+			wave = new Wave();
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 1, 10, 4);
+			wave.addSpawnPoint(new Point(320, 360), EnemyType.THINKY, 2, 10, 4);
+			wave.addSpawnPoint(new Point(0, 180), EnemyType.THINKY, 2, 10, 4);
+			wave.addSpawnPoint(new Point(640, 180), EnemyType.THINKY, 2, 10, 4);
 			waves.push(wave);
 			
 			reset();

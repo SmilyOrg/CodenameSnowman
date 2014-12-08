@@ -123,7 +123,7 @@ package  {
 		}
 		
 		override public function render(t:Number) {
-			basic.render(p);
+			basic.render(this);
 			
 			super.render(t);
 		}

@@ -46,7 +46,7 @@ package
 			sprite.x = p.x;
 			sprite.y = p.y;
 			
-			animActor = new AnimActor("assets/flag.png", 32, 32, 0);
+			animActor = new AnimActor(Texture.fromAsset("assets/flag.png"), 32, 32, 0);
 			animActor.play();
 			animActor.center();
 			animActor.x = image.x + 18;

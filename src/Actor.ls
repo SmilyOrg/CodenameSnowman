@@ -23,10 +23,6 @@ package  {
 		protected var snowballProgress:Number = 0;
 		private static const SNOWBALL_MAKING_TIME = 3;
 		protected var speed = 3000;
-		protected var moving = false;
-		private var footstepTime = 0;
-		private var footstepTreshold = 0.2;
-		protected var moving0 = false;
 		protected var cd = -1;
 		protected var cdTreshold = .10;
 		
@@ -66,19 +62,6 @@ package  {
 				if (moveRight) a.x += 1;
 				if (moveUp) a.y -= 1;
 				if (moveDown) a.y += 1;
-				moving = v.length > 10;
-				if (moving || moving0) {
-					if (footstepTime > footstepTreshold || moving0 != moving) {
-						if (moving0 != moving) {
-							footstepTime = 0;
-						} else {
-							footstepTime -= footstepTreshold;
-						}
-					}
-					
-					footstepTime += dt;
-				}
-				moving0 = moving;
 				
 				a.normalize(speed);
 			}

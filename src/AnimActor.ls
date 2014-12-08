@@ -11,9 +11,8 @@ package
 	public class AnimActor extends MovieClip
 	{
 		
-		public function AnimActor(path:String, spriteWidth:int = 32, spriteHeight:int = 32, spriteRow:int = 0) 
+		public function AnimActor(tex:Texture, spriteWidth:int = 32, spriteHeight:int = 32, spriteRow:int = 0) 
 		{
-			var tex = Texture.fromAsset(path);
 			var textures = new Vector.<Texture>();
 			var spriteCount = tex.width / spriteWidth;
 			spriteRow = spriteRow < 0 ? 0 : spriteRow;
