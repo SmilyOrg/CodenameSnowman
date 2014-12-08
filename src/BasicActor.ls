@@ -93,31 +93,6 @@ package  {
 			moving0 = moving;
 			
 			at += dt * v.length * 0.02;
-			
-			/*
-			//ANIMATION LOOP
-			for (var i = 0; i < anims.length; i++) {
-				var a:AnimActor = anims[i];
-				
-				anims[i].advanceTime(dt * v.length * 0.02);
-				animsShadow[i].advanceTime(dt * v.length * 0.02);
-				if (a.state == Actor.STATE_THROWING) {
-					anims[i].currentFrame = 4;
-					animsShadow[i].currentFrame = 4;
-				} else if (a.onCooldown()) {
-					anims[i].currentFrame = 5;
-					animsShadow[i].currentFrame = 5;
-				} else {
-					if (!moving || anims[i].currentFrame == 4) {
-						anims[i].currentFrame = 0;
-						animsShadow[i].currentFrame = 0;
-					} else if (anims[i].currentFrame > 5) {
-						anims[i].currentFrame = 0;
-						animsShadow[i].currentFrame = 0;
-					}
-				}
-			}
-			//*/
 		}
 		
 		private function onFootstep(p:Point)
@@ -194,43 +169,16 @@ package  {
 				lastFrame = activeAnim.currentFrame;
 			}
 			
-			/*if (a.state == Actor.STATE_THROWING || a.state == ThinkyAI.STATE_AIMING) {
-				activeAnim.currentFrame = 4;
-				activeShadow.currentFrame = 4;
-			} else if (a.onCooldown()) {
-				activeAnim.currentFrame = 5;
-				activeShadow.currentFrame = 5;
-			} else {
-				if (!moving || activeAnim.currentFrame == 4) {
-					activeAnim.currentFrame = 0;
-					activeShadow.currentFrame = 0;
-				} else if (activeAnim.currentFrame > 5) {
-					activeAnim.currentFrame = 0;
-					activeShadow.currentFrame = 0;
-				}
-			}*/
-			
 			
 			activeAnim.x = p.x;
 			activeAnim.y = p.y;
 			
 			activeShadow.x = p.x + 9;
 			activeShadow.y = p.y + 1;
-			
-			/*
-			for (var i = 0; i < anims.length; i++) {
-				anims[i].x = p.x;
-				anims[i].y = p.y;
-				
-				animsShadow[i].x = p.x + 9;
-				animsShadow[i].y = p.y + 1;
-			}
-			*/
 		}
 		
 		private function setAnimTime(anim:AnimActor, at:Number) {
 			anim.currentFrame = Math.floor((at*anim.fps)%anim.numFrames);
-			//trace(anim, (at*anim.fps)%anim.numFrames);
 		}
 		
 		public function destroy() {

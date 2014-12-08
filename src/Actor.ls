@@ -37,6 +37,12 @@ package  {
 		
 		private var footstep:Sound;
 		
+		//DYING ANIMATONS
+		private var deathTime:Number = 0.25;
+		public var decays:Boolean = true;
+		private var decayTime:Number = 1;
+		private var deathTimer:Number = 0;
+		
 		public function Actor() {
 			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
 			footstep.setGain(0.1);
@@ -58,25 +64,26 @@ package  {
 		}
 		
 		override public function tick(t:Number, dt:Number) {
-			
-			if (!isMakingSnowball)
-			{
-				if (moveLeft) a.x -= 1;
-				if (moveRight) a.x += 1;
-				if (moveUp) a.y -= 1;
-				if (moveDown) a.y += 1;
-				
-				a.normalize(speed);
-			}
-			else
-			{
-				snowballProgress += dt;
-				
-				if (snowballProgress >= SNOWBALL_MAKING_TIME)
+			if (!(state == STATE_DEAD || state == STATE_DYING)) {
+				if (!isMakingSnowball)
 				{
-					trace("finished making snowball");
-					environment.getSnowballUi().pickUpSnowball();
-					endMakingSnowball();
+					if (moveLeft) a.x -= 1;
+					if (moveRight) a.x += 1;
+					if (moveUp) a.y -= 1;
+					if (moveDown) a.y += 1;
+					
+					a.normalize(speed);
+				}
+				else
+				{
+					snowballProgress += dt;
+					
+					if (snowballProgress >= SNOWBALL_MAKING_TIME)
+					{
+						trace("finished making snowball");
+						environment.getSnowballUi().pickUpSnowball();
+						endMakingSnowball();
+					}
 				}
 			}
 			
@@ -92,6 +99,20 @@ package  {
 			
 			progressBg.visible = isMakingSnowball;
 			progressFg.visible = isMakingSnowball;
+			
+			if (state == STATE_DYING) {
+				deathTimer += dt;
+				
+				if (deathTimer > deathTime) {
+					state = STATE_DEAD;
+					deathTimer -= deathTime;
+				}
+			} else if (state == STATE_DEAD && decays) {
+				deathTimer += dt;
+				if (deathTimer > decayTime) {
+					destroy();
+				}
+			}
 			
 			super.tick(t, dt);
 		}
@@ -112,7 +133,8 @@ package  {
 		}
 		
 		public function die():void {
-			state = STATE_DEAD;
+			state = STATE_DYING;
+			isCollidable = false;
 		}
 		
 		override public function destroy():Boolean 

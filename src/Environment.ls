@@ -471,7 +471,8 @@ package  {
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
 					if (snowballOwner != ai && snowball.checkCollision(ai)) {
-						ai.destroy();
+						//ai.destroy();
+						ai.die();
 						if (snowball.owner == player) {
 							scoreUI.addScore(ai.score);
 						}
