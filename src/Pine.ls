@@ -25,6 +25,9 @@ package
 		private var image:Image;
 		private var overlay:Image;
 		private var shadow:Image;
+		private var pineAnim:AnimActor;
+		private var isHit:Boolean = false;
+		private var lastFrame:int = -1;
 		
 		public function Pine(container: DisplayObjectContainer):void
 		{
@@ -35,16 +38,29 @@ package
 			if(textureOverlay == null)
 				textureOverlay = Texture.fromAsset("assets/Tree-snow-overlay.png");
 			
+			pineAnim = new AnimActor("assets/tree_shake.png", 64, 64);
+			//pineAnim.loop = false;
+			pineAnim.play();
+			display.addChild(pineAnim);
+			
 			image = new Image(texture);
 			display.addChild(image);
 			
+			image.visible = false;
+			
 			overlay = new Image(textureOverlay);
 			display.addChild(overlay);
+			
 			
 			overlay.y = image.y = -image.height + 4;
 			overlay.x = image.x = -image.width / 2;
 			
 			container.addChild(display);
+			
+			pineAnim.y = -pineAnim.height / 2 + 4;
+			/*pineAnim.y = -pineAnim.height + 4;
+			pineAnim.x = -pineAnim.width / 2;*/
+			
 			
 			shadow = new Image(shadowTexture);
 			environment.getShadowLayer().addChild(shadow);
@@ -86,6 +102,21 @@ package
 			
 			shadow.x = display.x + 12 + image.x;
 			shadow.y = display.y + image.y;
+			
+			pineAnim.advanceTime(dt*2);
+			
+			if (lastFrame == pineAnim.numFrames-1 && pineAnim.currentFrame == 0) {
+				isHit = false;
+				lastFrame = -1;
+			}
+			
+			if (!isHit) {
+				pineAnim.currentFrame = 0;
+			} else {
+				lastFrame = pineAnim.currentFrame;
+			}
+			
+			//pineAnim.currentFrame = (pineAnim.currentFrame + 1) % pineAnim.numFrames;
 		}
 		
 		/* INTERFACE IHittable */
@@ -100,6 +131,10 @@ package
 				trace(p.x + i % 2 * ( -1) * 8, p.y + 4);
 				environment.addSnowball(p.x + (i % 2 * 2 - 1) * Math.floor((i+1) / 2) * 12, p.y + 8);
 			}
+			
+			isHit = true;
+			lastFrame = -1;
+			pineAnim.currentFrame = 0;
 			
 			overlayTime = 0;
 		}

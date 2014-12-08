@@ -7,8 +7,8 @@ package  {
 	
 	public class ThinkyAI extends AI {
 		
-		private var STATE_WANDER = 10;
-		private var STATE_AIMING = 11;
+		public static var STATE_WANDER = 10;
+		public static var STATE_AIMING = 11;
 		
 		private var basic:BasicActor;
 		

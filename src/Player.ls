@@ -61,7 +61,7 @@ package  {
 			}
 			breathTime += dt;
 			
-			if (state != Actor.STATE_THROWING && cd < cdTreshold && cd >= 0) {
+			if (state != STATE_THROWING && cd < cdTreshold && cd >= 0) {
 				cd += dt;
 			} else if (cd >= cdTreshold) {
 				cd = -1;

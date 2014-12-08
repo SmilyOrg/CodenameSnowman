@@ -439,6 +439,8 @@ package  {
 			
 			for (i = 0; i < snowballs.length; i++) {
 				var snowball = snowballs[i];
+				if (snowball.state == Entity.STATE_DESTROYED)
+					continue;
 				
 				for (j = 0; j < pines.length; j++)
 				{
@@ -449,16 +451,6 @@ package  {
 						if(!snowball.isYellowSnow())
 							snowball.destroy();
 					}
-				}
-				
-				if (!snowball.checkCollision(arena))
-				{
-					snowball.destroy();
-				}
-				
-				if (snowball.checkCollision(walls))
-				{
-					snowball.destroy();
 				}
 				
 				for (j = 0; j < ais.length; j++) {
@@ -480,6 +472,16 @@ package  {
 						death();
 					}
 					
+					snowball.destroy();
+				}
+				
+				if (!snowball.checkCollision(arena))
+				{
+					snowball.destroy();
+				}
+				
+				if (snowball.checkCollision(walls))
+				{
 					snowball.destroy();
 				}
 			}
