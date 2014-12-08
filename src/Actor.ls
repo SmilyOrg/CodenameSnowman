@@ -36,6 +36,7 @@ package  {
 		protected var progressFg:Sprite = null;
 		
 		private var footstep:Sound;
+		private static var makingSound:Sound = null;
 		
 		//DYING ANIMATONS
 		private var deathTime:Number = 0.25;
@@ -46,6 +47,13 @@ package  {
 		public function Actor() {
 			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
 			footstep.setGain(0.1);
+			
+			if (makingSound == null)
+			{
+				makingSound = Sound.load("assets/sound/make-snowball.ogg");
+				makingSound.setLooping(true);
+				makingSound.setGain(0.05);
+			}
 			
 			if (progressBgTexture == null)
 				progressBgTexture = Texture.fromAsset("assets/progress-bar-bg.png");
@@ -118,16 +126,18 @@ package  {
 		}
 		
 		public function startMakingSnowball():void {
-			trace("start making snowball");
+			
 			if (!environment.getSnowballUi().hasMax())
 			{
+				makingSound.play();
 				isMakingSnowball = true;
 				snowballProgress = 0;
 			}
 		}
 		
 		public function endMakingSnowball():void {
-			trace("end making snowball");
+			
+			makingSound.stop();
 			isMakingSnowball = false;
 			snowballProgress = 0;
 		}

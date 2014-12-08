@@ -31,8 +31,8 @@ package  {
 		private var lastFrame:int = -1;
 		
 		public function BasicActor(container:DisplayObjectContainer, shadowContainer:DisplayObjectContainer, color:int = 0xFFFFFF) {
-			//footstep = Sound.load("assets/sound/snow_tread_1.ogg");
-			//footstep.setGain(0.1);
+			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
+			footstep.setGain(0.1);
 			
 			if (walk == null) walk = Texture.fromAsset("assets/eskimo-walk.png");
 			if (walkShadow == null) walkShadow = Texture.fromAsset("assets/eskimo-walk-shadows.png");
@@ -80,7 +80,7 @@ package  {
 			moving = v.length > 10;
 			if (moving || moving0) {
 				if (footstepTime > footstepTreshold || moving0 != moving) {
-					//onFootstep(p);
+					onFootstep(p);
 					if (moving0 != moving) {
 						footstepTime = 0;
 					} else {
@@ -101,10 +101,10 @@ package  {
 				footstep.setPitch(Math.random() * 0.5 + 0.7);
 				footstep.play();
 			
-				var footprint = new Footprint();
-				footprint.setPosition(p.x, p.y + 8);
-				Entity.environment.addEntity(footprint);
-				lastFootprint = footprint.getPosition();
+				//var footprint = new Footprint();
+				//footprint.setPosition(p.x, p.y + 8);
+				//Entity.environment.addEntity(footprint);
+				//lastFootprint = footprint.getPosition();
 			}
 		}
 		

@@ -1,5 +1,6 @@
 package  
 {
+	import loom.sound.Sound;
 	import loom2d.display.Image;
 	import loom2d.textures.Texture;
 	
@@ -16,6 +17,8 @@ package
 		private var fadeTimer = 0;
 		private static const FADE_DURATION = 20;
 		
+		private static var pickupSound:Sound = null;
+		
 		public function SnowballItem(doesFade:Boolean) 
 		{
 			v.x = 0;
@@ -28,6 +31,12 @@ package
 			if (texture == null)
 			{
 				texture = Texture.fromAsset("assets/snowball.png");
+			}
+			
+			if (pickupSound == null)
+			{
+				pickupSound = Sound.load("assets/sound/pickup.ogg");
+				pickupSound.setGain(0.1);
 			}
 			
 			image = new Image(texture);
@@ -68,6 +77,8 @@ package
 		
 		public override function destroy():Boolean
 		{
+			pickupSound.play();
+			
 			if (!super.destroy()) return false;
 			image.removeFromParent();
 			return true;

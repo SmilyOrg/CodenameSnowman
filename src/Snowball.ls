@@ -1,5 +1,6 @@
 package  
 {
+	import loom.sound.Sound;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
 	import loom2d.math.Point;
@@ -22,6 +23,9 @@ package
 		private static const MIN_TIME = 0.33;
 		private var time:Number;
 		private var initTime:Number;
+		private var doPlaySound:Boolean = true;
+		
+		private static var hitSound:Sound = null;
 		
 		public function Snowball(container:DisplayObjectContainer, owner:Actor, origin:Point, direction:Point, charge:Number, maxCharge:Number) 
 		{
@@ -32,6 +36,12 @@ package
 				
 			if (shadowTexture == null)
 				shadowTexture = Texture.fromAsset("assets/snowball-shadow.png");
+				
+			if (hitSound == null)
+			{
+				hitSound = Sound.load("assets/sound/hit.ogg");
+				hitSound.setGain(0.2);
+			}
 			
 			image = new Image(texture);
 			shadowImage = new Image(shadowTexture);
@@ -66,6 +76,7 @@ package
 			
 			if (time <= 0 && !yellowSnow)
 			{
+				suppressSound();
 				destroy();
 				var hole = new SnowballHole();
 				hole.setPosition(p.x, p.y);
@@ -98,12 +109,28 @@ package
 			return yellowSnow;
 		}
 		
+		public function suppressSound()
+		{
+			doPlaySound = false;
+		}
+		
+		public function playSound()
+		{
+			hitSound.play();
+		}
+		
 		public function destroy():Boolean
 		{
 			if (!super.destroy()) return false;
+			
+			if (doPlaySound)
+			{
+				playSound();
+			}
+			
 			image.removeFromParent(true);
 			shadowImage.removeFromParent(true);
-			owner = null;
+			owner = null;			
 			return true;
 		}
 	}
