@@ -10,6 +10,8 @@ package  {
 	
 	public class Actor extends Entity {
 		
+		public static const STATE_THROWING = 3;
+		
 		public var moveUp:Boolean = false;
 		public var moveDown:Boolean = false;
 		public var moveLeft:Boolean = false;
@@ -17,7 +19,7 @@ package  {
 		
 		public var onSnowball:SnowballThrow;
 		
-		protected var isMakingSnowball:Boolean = false;		
+		protected var isMakingSnowball:Boolean = false;
 		protected var snowballProgress:Number = 0;
 		private static const SNOWBALL_MAKING_TIME = 3;
 		protected var speed = 3000;
@@ -25,6 +27,8 @@ package  {
 		private var footstepTime = 0;
 		private var footstepTreshold = 0.2;
 		protected var moving0 = false;
+		protected var cd = -1;
+		protected var cdTreshold = .10;
 		
 		protected var progressBgTexture:Texture = null;
 		protected var progressFgTexture:Texture = null;
@@ -54,16 +58,6 @@ package  {
 			hasFreeWill = true;
 		}
 		
-		/*private function onFootstep()
-		{
-			footstep.setPitch(Math.random() * 0.5 + 0.7);
-			footstep.play();
-			
-			var footprint = new Footprint();
-			footprint.setPosition(p.x, p.y + 8);
-			Entity.environment.addEntity(footprint);
-		}*/
-		
 		override public function tick(t:Number, dt:Number) {
 			
 			if (!isMakingSnowball)
@@ -75,7 +69,6 @@ package  {
 				moving = v.length > 10;
 				if (moving || moving0) {
 					if (footstepTime > footstepTreshold || moving0 != moving) {
-						//onFootstep();
 						if (moving0 != moving) {
 							footstepTime = 0;
 						} else {
@@ -115,6 +108,10 @@ package  {
 			progressFg.visible = isMakingSnowball;
 			
 			super.tick(t, dt);
+		}
+		
+		public function onCooldown():Boolean {
+			return (cd >= 0 && cd < cdTreshold);
 		}
 		
 		public function startMakingSnowball():void {

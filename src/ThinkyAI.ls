@@ -89,7 +89,7 @@ package  {
 					break;
 			}
 			
-			basic.tick(t, dt, p, v);
+			basic.tick(t, dt, this);
 			super.tick(t, dt);
 		}
 		

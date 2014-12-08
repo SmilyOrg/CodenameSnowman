@@ -52,6 +52,10 @@ package
 			return p;
 		}
 		
+		public function getVelocity():Point {
+			return v;
+		}
+		
 		protected function addCollisionEntity(px:int, py:int, x:int, y:int, w:int, h:int)
 		{
 			var entity = new Entity();

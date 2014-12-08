@@ -15,11 +15,12 @@ package
 		private var interval:Number;
 		private var onSpawn:Function;
 		private var onDeath:Function;
+		private var delay:Number;
 		
 		private var lastSpawnTime = 0;
 		private var currentCount = 0;
 		
-		public function SpawnPoint(l:Point, t:EnemyType, c:Number, i:Number, spawned:Function, died:Function) 
+		public function SpawnPoint(l:Point, t:EnemyType, c:Number, i:Number, d:Number, spawned:Function, died:Function) 
 		{
 			location = l;
 			type = t;
@@ -28,6 +29,7 @@ package
 			lastSpawnTime = interval;
 			onSpawn = spawned;
 			onDeath = died;
+			delay = d;
 		}
 		
 		public function isExhausted():Boolean
@@ -58,6 +60,12 @@ package
 		
 		public function tick(dt:Number)
 		{
+			if (delay >= 0)
+			{
+				delay -= dt;
+				return;
+			}
+			
 			lastSpawnTime += dt;
 			
 			if (currentCount >= maxCount)

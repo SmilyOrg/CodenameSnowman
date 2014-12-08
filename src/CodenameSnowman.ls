@@ -35,10 +35,17 @@ package
 			
 			TextureSmoothing.defaultSmoothing = TextureSmoothing.NONE;
 			
-			environment = new Environment(stage, w, h);
+			environment = new Environment(stage, w, h, restart);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
+		private function restart()
+		{
+			stage.removeChildren(0, stage.numChildren - 1, true);
+			
+			environment = new Environment(stage, w, h, restart);
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {

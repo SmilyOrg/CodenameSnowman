@@ -1,5 +1,6 @@
 package  {
 	import loom.admob.InterstitialAd;
+	import loom.Application;
 	import loom2d.display.DisplayObject;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
@@ -11,6 +12,7 @@ package  {
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
+	import loom2d.ui.ButtonClickCallback;
 	
 	public class Environment {
 		
@@ -20,11 +22,14 @@ package  {
 		private var background:Image;
 		
 		private var shadowLayer:Sprite = new Sprite();
+		private var fogLayer:Sprite = new Sprite();
 		private var ground:Sprite = new Sprite();
 		private var display:Sprite = new Sprite();
 		private var ui:Sprite = new Sprite();
 		
 		private var scoreUI:ScoreUI;
+		private var messageUI:MessageUI;
+		private var whiteoutUI:WhiteoutUI;
 		
 		private var arena:Entity;
 		
@@ -52,12 +57,18 @@ package  {
 		
 		private var waves:Vector.<Wave> = new Vector.<Wave>();
 		private var currentWave:Number = 0;
+		private var realRestart:Function;
+		private var shouldBeRestarted:Boolean = false;
 		
 		private var debug:Quad;
 		
-		public function Environment(stage:Stage, w:int, h:int) {
+		private var started:Boolean;
+		private var stopped:Boolean;
+		
+		public function Environment(stage:Stage, w:int, h:int, restart:Function) {
 			this.w = w;
 			this.h = h;
+			realRestart = restart;
 			
 			Entity.environment = this;
 			
@@ -132,46 +143,70 @@ package  {
 			snowOverlay.initialize(w, h);
 			
 			snowballUi = new SnowballUI();
-			
 			scoreUI = new ScoreUI(ui, h);
+			messageUI = new MessageUI(ui);
+			whiteoutUI = new WhiteoutUI(ui);
 			
 			spawnRadiusMin = 200;
 			spawnRadiusMax = 300;
 			
 			display.scale = 2;
 			shadowLayer.scale = 2;
+			fogLayer.scale = 2;
 			ground.scale = 2;
 			ui.scale = 2;
 			
 			stage.addChild(ground);
 			stage.addChild(shadowLayer);
 			stage.addChild(display);
+			stage.addChild(fogLayer);
 			stage.addChild(ui);
 			debug = new Quad(5, 5, 0x00FF00, true, true);
 			display.addChild(debug);
 			
 			var wave = new Wave();
-			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 2, 20);
-			wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 2, 20);
-			wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 2, 20);
-			wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 2, 20);
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 1, 20, 1);
+			//wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 2, 20);
+			//wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 2, 20);
+			//wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 2, 20);
 			waves.push(wave);
 			
 			wave = new Wave();
-			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 3, 10);
-			wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 3, 10);
-			wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 3, 10);
-			wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 3, 10);
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.SIMPLE, 1, 10, 4);
+			//wave.addSpawnPoint(new Point(320, 360), EnemyType.SIMPLE, 3, 10);
+			//wave.addSpawnPoint(new Point(0, 180), EnemyType.SIMPLE, 3, 10);
+			//wave.addSpawnPoint(new Point(640, 180), EnemyType.SIMPLE, 3, 10);
 			waves.push(wave);
 			
 			wave = new Wave();
-			wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 2, 10);
-			wave.addSpawnPoint(new Point(320, 360), EnemyType.THINKY, 2, 10);
-			wave.addSpawnPoint(new Point(0, 180), EnemyType.THINKY, 2, 10);
-			wave.addSpawnPoint(new Point(640, 180), EnemyType.THINKY, 2, 10);
+			wave.addSpawnPoint(new Point(320, 0), EnemyType.THINKY, 1, 10, 4);
+			//wave.addSpawnPoint(new Point(320, 360), EnemyType.THINKY, 2, 10);
+			//wave.addSpawnPoint(new Point(0, 180), EnemyType.THINKY, 2, 10);
+			//wave.addSpawnPoint(new Point(640, 180), EnemyType.THINKY, 2, 10);
 			waves.push(wave);
 			
 			reset();
+			
+			// just to init everything before the actual ticking of waves
+			started = false;
+			stopped = false;
+			
+			whiteoutUI.fadeIn(getReady);
+		}
+		
+		private function getReady()
+		{
+			setMessage("Get ready!", start);
+		}
+		
+		private function start()
+		{
+			setMessage("Wave " + (currentWave + 1), reallyStart);
+		}
+		
+		private function reallyStart()
+		{
+			started = true;
 		}
 		
 		public function getClosestNavPoint(actor:Actor):Point {
@@ -254,6 +289,10 @@ package  {
 		}
 		
 		public function onKeyDown(e:KeyboardEvent) {
+			
+			if (!started)
+				return;
+			
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = true;
@@ -278,6 +317,10 @@ package  {
 		}
 		
 		public function onKeyUp(e:KeyboardEvent) {
+			
+			if (!started)
+				return;
+			
 			switch (e.keyCode) {
 				case 26: // W
 					player.moveUp = false;
@@ -318,35 +361,81 @@ package  {
 			addEntity(snowball);
 		}
 		
+		private function victory()
+		{
+			setMessage("Victory", restart);
+			started = false;
+			stopped = true;
+		}
+		
+		private function death()
+		{
+			setMessage("You were defeated!", restart);
+			started = false;
+			stopped = true;
+		}
+		
+		private function defeat()
+		{
+			setMessage("You were defeated!", restart);
+			started = false;
+			stopped = true;
+		}
+		
+		private function restart()
+		{
+			trace("restart");
+			whiteoutUI.fadeOut(doRestart);
+		}
+		
+		private function doRestart()
+		{
+			shouldBeRestarted = true;
+		}
+		
 		public override function tick(t:Number, dt:Number) {
-
+			
+			if(!stopped)
+				snowOverlay.tick(dt);
+			snowballUi.tick(t, dt);
+			messageUI.tick(t, dt);
+			whiteoutUI.tick(t, dt);
+			
 			var ai:AI;
 			
 			var i:int;
 			var j:int;
-			
+						
 			var center = new Point(w/2, h/2);
 			
 			if (currentWave < waves.length)
 			{
-				waves[currentWave].tick(dt);
-				
-				if (waves[currentWave].isFinished())
+				if (started)
 				{
-					currentWave++;
-					trace("new wave");
+					waves[currentWave].tick(dt);
+					
+					if (waves[currentWave].isFinished())
+					{
+						currentWave++;
+						setMessage("Wave " + (currentWave + 1));
+					}
+				}
+			}
+			else
+			{
+				if (started)
+				{
+					victory();
 				}
 			}
 			
-			for (i = 0; i < entities.length; i++) {
-				var entity:Entity = entities[i];
-				entity.tick(t, dt);
+			if (!stopped)
+			{
+				for (i = 0; i < entities.length; i++) {
+					var entity:Entity = entities[i];
+					entity.tick(t, dt);
+				}
 			}
-
-			snowOverlay.tick(dt);
-			snowballUi.tick(t, dt);
-			
-			snowOverlay.tick(dt);
 			
 			for (i = 0; i < snowballs.length; i++) {
 				var snowball = snowballs[i];
@@ -374,11 +463,21 @@ package  {
 				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
-					if (snowball.checkCollision(ai) && snowball.owner != ai) {
+					if (snowball.owner != ai && snowball.checkCollision(ai)) {
 						ai.destroy();
 						if(!snowball.isYellowSnow())
 							snowball.destroy();
 					}
+				}
+				
+				if (snowball.owner != player && snowball.checkCollision(player))
+				{
+					if (player.takeDamage())
+					{
+						death();
+					}
+					
+					snowball.destroy();
 				}
 			}
 			
@@ -419,10 +518,21 @@ package  {
 				}
 			}
 			
+			flag.isBeingTaken = false;
 			var playerPos:Point = player.getPosition();
 			for (i = 0; i < ais.length; i++) {
 				ai = ais[i];
 				ai.target = playerPos;
+				
+				if (Point.distance(ai.getPosition(), flag.getPosition()) < 12)
+				{
+					flag.isBeingTaken = true;
+				}
+			}
+			
+			if (flag.isTaken() && !stopped)
+			{
+				defeat();
 			}
 			
 			flush();
@@ -436,6 +546,9 @@ package  {
 				var entity = entities[i];
 				entity.render(t);
 			}
+			
+			if(shouldBeRestarted)
+				realRestart();
 		}
 		
 		private function sortByY(a:DisplayObject, b:DisplayObject):int {
@@ -462,7 +575,6 @@ package  {
 			for (var i = 0; i < entities.length; i++) {
 				var ent = entities[i];
 				if (e != ent && e.checkCollision(ent)) {
-					if(e.getTypeName() == "Player")
 					return true;
 				}
 			}
@@ -489,6 +601,11 @@ package  {
 			return shadowLayer;
 		}
 		
+		public function getFogLayer():DisplayObjectContainer
+		{
+			return fogLayer;
+		}
+		
 		public function getSnowballUi(): SnowballUI
 		{
 			return snowballUi;
@@ -498,6 +615,10 @@ package  {
 		{
 			return scoreUI;
 		}
+		
+		public function setMessage(message:String, callback:Function = null)
+		{
+			messageUI.setMessage(message, 2, callback);
+		}
 	}
-	
 }
