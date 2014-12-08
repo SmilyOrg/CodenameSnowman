@@ -478,6 +478,8 @@ package  {
 						if (!snowball.isYellowSnow()) {
 							snowball.destroy();
 						}
+						else
+							snowball.playSound();
 					}
 				}
 				
@@ -494,6 +496,8 @@ package  {
 							snowballSplash(snowball);
 							snowball.destroy();
 						}
+						else
+							snowball.playSound();
 					}
 				}
 				
@@ -511,6 +515,7 @@ package  {
 				
 				if (!snowball.checkCollision(arena))
 				{
+					snowball.suppressSound();
 					snowball.destroy();
 				}
 				
