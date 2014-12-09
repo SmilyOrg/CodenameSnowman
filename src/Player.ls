@@ -19,11 +19,11 @@ package  {
 		private var emmiterLocations:Vector.<Point> = [
 														new Point(16, 3), //up
 														new Point(22, 7), //up-right
-														new Point(16, 18), //right
+														new Point(24, 18), //right
 														new Point(20, 18), //down-right
-														new Point(8, 18), //down
+														new Point(16, 18), //down
 														new Point(12, 18), //down-left
-														new Point(24, 18), //left
+														new Point(8, 18), //left
 														new Point(10, 8) //up-left
 													];
 		private var currDir:int = 2;
@@ -55,8 +55,8 @@ package  {
 			//Player breath
 			var breathDelay = 2;
 			if (breathTime > breathDelay) {
-				pdps.emitterX = p.x + (emmiterLocations[currDir].x - 16);
-				pdps.emitterY = p.y + (emmiterLocations[currDir].y - 16);
+				pdps.emitterX = p.x + (emmiterLocations[basic.getAngle(v)].x - 16);
+				pdps.emitterY = p.y + (emmiterLocations[basic.getAngle(v)].y - 16);
 				pdps.populate(5, 0);
 				breathTime -= breathDelay;
 			}

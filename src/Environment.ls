@@ -210,7 +210,7 @@ package  {
 			reset();
 			
 			// just to init everything before the actual ticking of waves
-			started = true;
+			started = false;
 			stopped = false;
 			
 			whiteoutUI.fadeIn(getReady);
