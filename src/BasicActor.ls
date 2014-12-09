@@ -133,6 +133,13 @@ package  {
 			activeShadow.visible = true;
 		}
 		
+		public function getAngle(v:Point):int {
+			var angle = Math.round(((Math.atan2(direction.x, -direction.y)) % Math.TWOPI / Math.TWOPI) * 8);
+			angle = angle == 8 ? 0 : angle;
+			
+			return angle;
+		}
+		
 		public function getDirection():Point {
 			return direction;
 		}
