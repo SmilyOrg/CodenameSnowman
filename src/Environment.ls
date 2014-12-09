@@ -5,7 +5,6 @@ package  {
 	import loom2d.display.DisplayObject;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
-	import loom2d.display.Quad;
 	import loom2d.display.Sprite;
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
@@ -62,8 +61,6 @@ package  {
 		private var currentWave:Number = 0;
 		private var realRestart:Function;
 		private var shouldBeRestarted:Boolean = false;
-		
-		private var debug:Quad;
 		
 		private var started:Boolean;
 		private var stopped:Boolean;
@@ -163,8 +160,6 @@ package  {
 			stage.addChild(display);
 			stage.addChild(fogLayer);
 			stage.addChild(ui);
-			debug = new Quad(5, 5, 0x00FF00, true, true);
-			display.addChild(debug);
 			
 			//Snowball particles
 			var path = "assets/particles/snowball-splash.pex";
@@ -211,7 +206,7 @@ package  {
 			reset();
 			
 			// just to init everything before the actual ticking of waves
-			started = false;
+			started = true;
 			stopped = false;
 			
 			whiteoutUI.fadeIn(getReady);
@@ -585,11 +580,13 @@ package  {
 		}
 		
 		public override function render(t:Number) {
-			display.sortChildren(sortByY);
+			
 			for (var i = 0; i < entities.length; i++) {
 				var entity = entities[i];
 				entity.render(t);
 			}
+			
+			display.sortChildren(sortByY);
 			
 			if(shouldBeRestarted)
 				realRestart();

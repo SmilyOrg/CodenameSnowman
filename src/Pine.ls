@@ -84,21 +84,24 @@ package
 			if (children != null)
 				children.clear();
 				
-			addCollisionEntity(p.x, p.y, -2, -40, 4, 25);
-			addCollisionEntity(p.x, p.y, -10, -25, 20, 10);
+			addCollisionEntity(p.x, p.y, -2, -32, 4, 25);
+			addCollisionEntity(p.x, p.y, -10, -17, 20, 10);
 		}
 		
 		public override function tick(t:Number, dt:Number):void
 		{			
-			if (overlayTime > MAX_OVERLAY_TIME)
+			if (state == STATE_IDLE)
 			{
-				image.alpha = 1;
-			}
-			else
-			{
-				overlayTime += dt;
-				overlay.alpha = Math.max(0.2, overlayTime / MAX_OVERLAY_TIME);
-			}
+				if (overlayTime > MAX_OVERLAY_TIME)
+				{
+					overlay.alpha = 1;
+				}
+				else
+				{
+					overlayTime += dt;
+					overlay.alpha = Math.max(0.2, overlayTime / MAX_OVERLAY_TIME);
+				}
+			}	
 			
 			display.x = p.x;
 			display.y = p.y;
@@ -111,6 +114,7 @@ package
 			if (lastFrame == pineAnim.numFrames-1 && pineAnim.currentFrame == 0) {
 				state = STATE_IDLE;
 				lastFrame = -1;
+				dropBalls();
 			}
 			
 			if (state == STATE_IDLE) {
@@ -126,18 +130,21 @@ package
 		
 		public function hit():void 
 		{	
+			state = STATE_SHAKING;
+			lastFrame = -1;
+			pineAnim.currentFrame = 0;
+			overlay.alpha = 0.2;
+		}
+		
+		public function dropBalls()
+		{
 			var dropCount = Math.floor((overlayTime / MAX_OVERLAY_TIME) * 3);
-			trace("drop count", dropCount);
 			
 			for (var i = 0; i < dropCount; i++)
 			{
 				trace(p.x + i % 2 * ( -1) * 8, p.y + 4);
 				environment.addSnowball(p.x + (i % 2 * 2 - 1) * Math.floor((i+1) / 2) * 12, p.y + 8);
 			}
-			
-			state = STATE_SHAKING;
-			lastFrame = -1;
-			pineAnim.currentFrame = 0;
 			
 			overlayTime = 0;
 		}

@@ -40,7 +40,7 @@ package  {
 			
 			basic.handleDirection(v);
 			
-			bounds = new Rectangle(-10, -16, 20, 32);
+			bounds = new Rectangle(-10, -8, 20, 20);
 			
 			chargeSound = Sound.load("assets/sound/zzzip.ogg");
 			

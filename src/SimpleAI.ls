@@ -13,7 +13,7 @@ package  {
 			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
 			
 			speed *= 0.7;
-			bounds = new  Rectangle(-10, -16, 20, 32);
+			bounds = new Rectangle(-10, -8, 20, 20);
 			
 			basic.handleDirection(v);
 		}
