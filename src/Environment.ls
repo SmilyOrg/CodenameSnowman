@@ -9,6 +9,7 @@ package  {
 	import loom2d.display.Stage;
 	import loom2d.events.KeyboardEvent;
 	import loom2d.events.Touch;
+	import loom2d.math.Color;
 	import loom2d.math.Point;
 	import loom2d.math.Rectangle;
 	import loom2d.textures.Texture;
@@ -40,6 +41,7 @@ package  {
 		private var snowballs = new Vector.<Snowball>();
 		private var snowballItems = new Vector.<SnowballItem>();
 		private var pines = new Vector.<Pine>();
+		private var snowmen = new Vector.<Snowman>();
 		
 		private var entities = new Vector.<Entity>();
 		
@@ -98,6 +100,8 @@ package  {
 			addPine(35, 340);
 			addPine(75, 285);
 			addPine(110, 330);
+			
+			addSnowman(10, 10);
 			
 			
 			var goal = new Point(w/2, h/2);
@@ -269,6 +273,13 @@ package  {
 				}
 			}
 			return null;
+		}
+		
+		public function addSnowman(x:int, y:int) {
+			var snowman = new Snowman(display);
+			snowman.setPosition(x, y);
+			snowmen.push(snowman);
+			addEntity(snowman);
 		}
 		
 		public function addPine(x:int, y:int)
@@ -477,6 +488,21 @@ package  {
 					}
 				}
 				
+				for (j = 0; j < snowmen.length; j++)
+				{
+					var snowman = snowmen[j];
+					if (snowball.checkCollision(snowman))
+					{
+						snowman.hit();
+						snowballSplash(snowball);
+						if (!snowball.isYellowSnow()) {
+							snowball.destroy();
+						}
+						else
+							snowball.playSound();
+					}
+				}
+				
 				for (j = 0; j < ais.length; j++) {
 					ai = ais[j];
 					if (snowballOwner != ai && snowball.checkCollision(ai)) {
@@ -623,12 +649,20 @@ package  {
 			return false;
 		}
 		
-		private function snowballSplash(ball:Snowball, hitTree:Boolean = false) {
+		private function snowballSplash(ball:Snowball) {
+			if (ball.isYellowSnow()) {
+				snowballParticles.startColor = new Color(0xDF, 0xDF, 0x00, 0.30);
+				snowballParticles.endColor = new Color(0xDF, 0xDF, 0x00, 0);
+			} else {
+				snowballParticles.startColor = new Color(0xFF, 0xFF, 0xFF, 0.72);
+				snowballParticles.endColor = new Color(0xFF, 0xFF, 0xFF, 0);
+			}
+			
 			snowballParticles.emitAngle = (Math.atan2(ball.getVelocity().y, ball.getVelocity().x));
 			
 			snowballParticles.emitterX = ball.getPosition().x;
 			snowballParticles.emitterY = ball.getPosition().y;
-			snowballParticles.populate(5, 0);
+			snowballParticles.populate(3, 0);
 		}
 		
 		public function getDisplay():DisplayObjectContainer

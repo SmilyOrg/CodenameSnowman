@@ -69,10 +69,6 @@ package  {
 				state = STATE_IDLE;
 			}
 			
-			if (state == STATE_THROWN) {
-				trace ("THROWN");
-			}
-			
 			if (chargeTimer != -1) {
 				chargeTimer = Math.min(chargeTime, chargeTimer+dt);
 				if (chargeTimer > 0.2) {
