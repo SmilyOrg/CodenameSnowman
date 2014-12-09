@@ -18,6 +18,7 @@ package  {
 		private var footstepTreshold = 0.2;
 		protected var moving = false;
 		protected var moving0 = false;
+		private var footsteps = 0;
 		
 		private var direction:Point = new Point(1, 0);
 		private var anims:Vector.<AnimActor>;
@@ -91,7 +92,7 @@ package  {
 			moving = v.length > 10;
 			if (moving || moving0) {
 				if (footstepTime > footstepTreshold || moving0 != moving) {
-					onFootstep(p);
+					onFootstep(p, v);
 					if (moving0 != moving) {
 						footstepTime = 0;
 					} else {
@@ -106,16 +107,20 @@ package  {
 			at += dt * v.length * 0.02;
 		}
 		
-		private function onFootstep(p:Point)
+		private function onFootstep(p:Point, v:Point)
 		{
 			if (Point.distance(p.add(new Point(0,8)), lastFootprint) > 5) {
 				footstep.setPitch(Math.random() * 0.5 + 0.7);
 				footstep.play();
 			
-				//var footprint = new Footprint();
-				//footprint.setPosition(p.x, p.y + 8);
-				//Entity.environment.addEntity(footprint);
-				//lastFootprint = footprint.getPosition();
+				var footprint = new Footprint();
+				var offset = new Point(v.y, -v.x);
+				offset.normalize(1);
+				footsteps++;
+				if (footsteps%2 == 0) offset.scale(-1);
+				footprint.setPosition(p.x + offset.x, p.y + 8 + offset.y);
+				Entity.environment.addEntity(footprint);
+				lastFootprint = footprint.getPosition();
 			}
 		}
 		
