@@ -21,7 +21,7 @@ package  {
 		
 		public function ThinkyAI(container:DisplayObjectContainer, difficulty:Number = 0) {
 			this.difficulty = difficulty;
-			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
+			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000, false);
 			bounds = new Rectangle(-10, -16, 20, 32);
 			basic.handleDirection(v);
 		}

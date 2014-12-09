@@ -6,8 +6,13 @@ package  {
 	
 	public class BasicActor {
 		
-		private static var walk:Texture;
-		private static var walkShadow:Texture;
+		private static var playerWalk:Texture;
+		private static var playerWalkShadow:Texture;
+		private static var enemyWalk:Texture;
+		private static var enemyWalkShadow:Texture;
+		
+		private var walk:Texture;
+		private var walkShadow:Texture;
 		
 		private var footstepTime = 0;
 		private var footstepTreshold = 0.2;
@@ -26,12 +31,22 @@ package  {
 		
 		private var at:Number = 0;
 		
-		public function BasicActor(container:DisplayObjectContainer, shadowContainer:DisplayObjectContainer, color:int = 0xFFFFFF) {
+		public function BasicActor(container:DisplayObjectContainer, shadowContainer:DisplayObjectContainer, color:int = 0xFFFFFF, player:Boolean = true) {
 			footstep = Sound.load("assets/sound/snow_tread_1.ogg");
 			footstep.setGain(0.1);
 			
-			if (walk == null) walk = Texture.fromAsset("assets/eskimo-walk.png");
-			if (walkShadow == null) walkShadow = Texture.fromAsset("assets/eskimo-walk-shadows.png");
+			if (playerWalk == null) playerWalk = Texture.fromAsset("assets/eskimo-walk.png");
+			if (playerWalkShadow == null) playerWalkShadow = Texture.fromAsset("assets/eskimo-walk-shadows.png");
+			if (enemyWalk == null) enemyWalk = Texture.fromAsset("assets/enemy-walk.png");
+			if (enemyWalkShadow == null) enemyWalkShadow = Texture.fromAsset("assets/eskimo-walk-shadows.png");
+			
+			if (player) {
+				walk = playerWalk;
+				walkShadow = playerWalkShadow;
+			} else {
+				walk = enemyWalk;
+				walkShadow = enemyWalkShadow;
+			}
 			
 			anims = new Vector.<AnimActor>();
 			anims.push(new AnimActor(walk));
@@ -56,7 +71,7 @@ package  {
 			for (var i = 0; i < anims.length; i++) {
 				//anims[i].play();
 				anims[i].center();
-				anims[i].color = color;
+				//anims[i].color = color;
 				//animsShadow[i].play();
 				animsShadow[i].center();
 				container.addChild(anims[i]);

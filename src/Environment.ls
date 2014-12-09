@@ -42,6 +42,7 @@ package  {
 		private var snowballs = new Vector.<Snowball>();
 		private var snowballItems = new Vector.<SnowballItem>();
 		private var pines = new Vector.<Pine>();
+		private var snowmen = new Vector.<Snowman>();
 		
 		private var entities = new Vector.<Entity>();
 		
@@ -102,6 +103,8 @@ package  {
 			addPine(35, 340);
 			addPine(75, 285);
 			addPine(110, 330);
+			
+			addSnowman(10, 10);
 			
 			
 			var goal = new Point(w/2, h/2);
@@ -275,6 +278,13 @@ package  {
 				}
 			}
 			return null;
+		}
+		
+		public function addSnowman(x:int, y:int) {
+			var snowman = new Snowman(display);
+			snowman.setPosition(x, y);
+			snowmen.push(snowman);
+			addEntity(snowman);
 		}
 		
 		public function addPine(x:int, y:int)
@@ -474,6 +484,21 @@ package  {
 					if (snowball.checkCollision(pine))
 					{
 						pine.hit();
+						snowballSplash(snowball);
+						if (!snowball.isYellowSnow()) {
+							snowball.destroy();
+						}
+						else
+							snowball.playSound();
+					}
+				}
+				
+				for (j = 0; j < snowmen.length; j++)
+				{
+					var snowman = snowmen[j];
+					if (snowball.checkCollision(snowman))
+					{
+						snowman.hit();
 						snowballSplash(snowball);
 						if (!snowball.isYellowSnow()) {
 							snowball.destroy();

@@ -10,7 +10,7 @@ package  {
 		private var basic:BasicActor;
 		
 		public function SimpleAI(container:DisplayObjectContainer) {
-			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000);
+			basic = new BasicActor(container, environment.getShadowLayer(), 0xFF0000, false);
 			
 			speed *= 0.7;
 			bounds = new  Rectangle(-10, -16, 20, 32);
