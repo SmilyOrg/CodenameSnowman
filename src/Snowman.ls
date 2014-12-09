@@ -28,7 +28,7 @@ package
 			image = new Image(texture);
 			display.addChild(image);
 			
-			//image.y = -image.height -10;
+			image.y = -image.height +10;
 			image.x = -image.width / 2;
 			
 			v = new Point(0, 0);
@@ -37,8 +37,7 @@ package
 			
 			container.addChild(display);
 			
-			//bounds = new Rectangle(-8, 16, 16, 16);
-			bounds = new Rectangle(-8,16,16,8);
+			bounds = new Rectangle(-8,image.y + 16,16,8);
 		}
 		
 		override public function setPosition(x:Number, y:Number)

@@ -101,7 +101,7 @@ package  {
 			addPine(75, 285);
 			addPine(110, 330);
 			
-			addSnowman(10, 10);
+			addSnowman(20, 20);
 			
 			
 			var goal = new Point(w/2, h/2);
