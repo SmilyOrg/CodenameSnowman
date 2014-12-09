@@ -61,6 +61,11 @@ package
 			return v;
 		}
 		
+		public function setVelocity(x:Number, y:Number) {
+			v.x = x;
+			v.y = y;
+		}
+		
 		protected function addCollisionEntity(px:int, py:int, x:int, y:int, w:int, h:int)
 		{
 			var entity = new Entity();

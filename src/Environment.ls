@@ -314,7 +314,7 @@ package  {
 				var ai = ais[i];
 				ai.setPosition(w*0.5, h*0.25);
 			}
-			player.setPosition(w*0.5, h*0.5);
+			player.setPosition(w*0.5, h*0.5+20);
 		}
 		
 		public function onKeyDown(e:KeyboardEvent) {
