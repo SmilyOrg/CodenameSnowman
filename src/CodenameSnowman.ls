@@ -27,6 +27,8 @@ package
 		private var h = 360;
 		
 		private var environment:Environment;
+        
+        private var keysDown:Vector.<Boolean> = new Vector.<Boolean>(256);
 		
 		override public function run():void
 		{	
@@ -49,10 +51,17 @@ package
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
+            if (e.keyCode >= 0 && e.keyCode < keysDown.length) {
+                if (keysDown[e.keyCode]) return;
+                keysDown[e.keyCode] = true;
+            }
 			environment.onKeyDown(e);
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void {
+            if (e.keyCode >= 0 && e.keyCode < keysDown.length) {
+                keysDown[e.keyCode] = false;
+            }
 			environment.onKeyUp(e);
 		}
 		
