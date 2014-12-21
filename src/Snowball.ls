@@ -13,6 +13,7 @@ package
 	 */
 	public class Snowball extends Entity
 	{
+		private static const ANGLE = 0.7071067811865;
 		public var owner:Actor;
 		private var image:Image;
 		private var shadowImage:Image;
@@ -24,6 +25,16 @@ package
 		private var time:Number;
 		private var initTime:Number;
 		private var doPlaySound:Boolean = true;
+		private static var directions:Vector.<Point> = [
+													new Point(0, -1), //down
+													new Point( ANGLE, -ANGLE), //down-right
+													new Point(1, 0), //right
+													new Point(ANGLE, ANGLE), //up-right
+													new Point(0, 1), //up
+													new Point(-ANGLE, ANGLE), //up-left
+													new Point(-1, 0), //left
+													new Point(-ANGLE, -ANGLE) //down-left
+												];
 		
 		private static var hitSound:Sound = null;
 		
@@ -49,7 +60,13 @@ package
 			container.addChild(image);
 			environment.getShadowLayer().addChild(shadowImage);
 			
-			direction.normalize();
+			
+			var angle = Math.round(((Math.atan2(direction.x, -direction.y)) % Math.TWOPI / Math.TWOPI) * 8);
+			angle = angle == 8 ? 0 : angle;
+			
+			direction = directions[angle];
+			
+			//direction.normalize();
 			
 			time = MIN_TIME + (charge / maxCharge) * (MAX_TIME - MIN_TIME);
 			initTime = time;
